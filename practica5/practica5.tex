@@ -1,0 +1,244 @@
+\documentclass[12pt,twoside]{article}
+\usepackage{amsmath, amssymb}
+\usepackage{amsmath}
+\usepackage[active]{srcltx}
+\usepackage{amssymb}
+\usepackage{amscd}
+\usepackage{makeidx}
+\usepackage{amsthm}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\usepackage{graphicx}
+\renewcommand{\baselinestretch}{1}
+\setcounter{page}{1}
+\setlength{\textheight}{21.6cm}
+\setlength{\textwidth}{14cm}
+\setlength{\oddsidemargin}{1cm}
+\setlength{\evensidemargin}{1cm}
+\pagestyle{myheadings}
+\thispagestyle{empty}
+\markboth{\small{Pr\'actica 5. Reyes Valenzuela Alejandro, Guti\'errez Povedano Pablo.}}{\small{.}}
+\date{}
+\begin{document}
+\centerline{\bf An\'alisis de Algoritmos, Sem: 2018-2, 3CV1, Pr\'actica 5, 4 de Octubre de 2018}
+\centerline{}
+\centerline{}
+\begin{center}
+\Large{\textsc{Pr\'actica 5: Problema del M\'aximo Subarreglo}}
+\end{center}
+\centerline{}
+\centerline{\bf {Reyes Valenzuela Alejandro, Guti\'errez Povedano Pablo.}}
+\centerline{}
+\centerline{Escuela Superior de C\'omputo}
+\centerline{Instituto Polit\'ecnico Nacional, M\'exico}
+\centerline{$areyesv11@gmail.com, gpovedanop@gmail.com$}
+\newtheorem{Theorem}{\quad Theorem}[section]
+\newtheorem{Definition}[Theorem]{\quad Definition}
+\newtheorem{Corollary}[Theorem]{\quad Corollary}
+\newtheorem{Lemma}[Theorem]{\quad Lemma}
+\newtheorem{Example}[Theorem]{\quad Example}
+\bigskip
+\textbf{Resumen:} En este reporte se aboradar\'a el algoritmo del m\'aximo subarreglo para determinar el orden de complejidad mediante el paradigma de divide y vencer\'as, tanto del algoritmo de subarreglo cruzado como el del subarreglo en s\'i.
+{\bf Palabras Clave:} Divide, Vence, Combina, Subarreglo.
+\section{Introducci\'on}
+En la pr\'actica anterior utilizamos el paradigma de divide y vencer\'as para analizar la complejidad del algortimo Quicksort, ahora reutilizaremos el paradigma para analizar el algoritmo del m\'aximo subarreglo, el cu\'al ya no es un arreglo de ordenamiento, pero que tambi\'en se apoya de una funci\'on auxiliar para funcionar, por lo que calcularemos la complejidad de ambos tanto anal\'iticamente como gr\'aficamente. Adicionalmente analizaremos una implementaci\'on con realizada con fuerza bruta, en donde veremos que el orden de complejidad es mayor con respecto a los otros dos algoritmos.\\\\
+\section{Conceptos B\'asicos}
+El paradigma de Divide y Vencer\'as separa un problema en subproblemas que se parecen al problema original, de manera recursiva resuelve los subproblemas y, por \'ultimo, combina las soluciones de los subproblemas para resolver el problema original.\newpage
+Como divide y vencerás resuelve subproblemas de manera recursiva, cada subproblema debe ser m\'as pequeño que el problema original, y debe haber un caso base para los subproblemas.\\\\
+Para ello recurrimos a tres pasos fundamentales:
+\begin{itemize}
+  \item {\bf Divide:} Dividir el problema en un n\'umero de subproblemas que son instancias m\'as pequeñas del mismo problema.
+  \item {\bf Vence:} Resolver los subproblemas de manera recursiva. Si son los suficientemente peque\~{n}os, resolver los subproblemas como casos base.
+  \item {\bf Combina:} Juntar las soluciones de los subproblemas en la soluci\'on para el problema original.
+\end{itemize}
+Haremos uso del paradigma anterior para encontrar el orden de complejidad del algoritmo del m\'aximo subarreglo cruzado y del m\'aximo subarreglo. 
+Dichos algoritmos nos sirven para encontrar la suma m\'axima que puede encontrarse en un arreglo de enteros, el cruzado toma en cuenta que pase por la mitad mientras que el general busca en ambos lados del mismo.\\\\
+Algoritmo Maximo subarreglo Cruzado.\\\\
+\hspace*{1cm}$MSC(A[bajo,...,medio,...,alto],alto,medio,bajo)$\\
+\hspace*{2cm}$suma\_izq$ = $-\infty$\\
+\hspace*{2cm}$suma = max\_der = max\_izq = 0$\\
+\hspace*{2cm}$for(i=medio;i \leq bajo+1;i--)$\\
+\hspace*{2.5cm}$suma = suma + A[i]$\\
+\hspace*{2.5cm}$if suma \geq suma\_izq$\\
+\hspace*{3cm}$max\_izq = i$\\
+\hspace*{2cm}$suma\_der$ = $-\infty$\\
+\hspace*{2cm}$suma = 0$\\
+\hspace*{2cm}$for(i=medio+1;i \leq alto+1;i++)$\\
+\hspace*{2.5cm}$suma = suma + A[i]$\\
+\hspace*{2.5cm}$if suma \geq suma\_der$\\
+\hspace*{3cm}$max\_der = i$\\
+\hspace*{2cm}$return (max\_izq, max\_der, suma\_der + suma\_izq)$\\\newpage
+Algoritmo Maximo Subarreglo\\\\
+\hspace*{1cm}$MS(A[bajo,...,alto],alto,bajo)$\\
+\hspace*{2cm}$if$ $alto = bajo$\\
+\hspace*{2.5cm}$return (bajo, alto, a[bajo])$\\
+\hspace*{2cm}$else$\\
+\hspace*{2.5cm}$mitad = (alto+bajo)/2$\\
+\hspace*{2.5cm}$(bajo\_izq, alto\_izq, suma\_izq) = MS(A, bajo, mitad)$\\
+\hspace*{2.5cm}$(bajo\_der, alto\_der, suma\_der) = MS(A, mitad+1, alto)$\\
+\hspace*{2.5cm}$(bajo\_cruz, alto\_cruz, suma\_cruz) = MSC(A, bajo, mitad, alto)$\\
+\hspace*{2cm}$if$ $(suma\_der \geq suma\_izq$ and $suma\_der \geq suma\_cruz)$\\
+\hspace*{2.5cm}$return (bajo\_der, alto\_der, suma\_der)$\\
+\hspace*{2cm}$else$ $if (suma\_izq \geq suma\_der$ and $suma\_izq \geq suma\_cruz)$\\
+\hspace*{2.5cm}$return (bajo\_izq, alto\_izq, suma\_izq)$\\
+\hspace*{2cm}$else$\\
+\hspace*{2.5cm}$return (bajo\_cruz, alto\_cruz, suma\_cruz)$\\\\
+Implementaci\'on usando fuerza bruta:\\\\
+\hspace*{1cm}$MSFB(A[bajo,..,alto],alto,bajo)$\\
+\hspace*{2cm}$suma\_max$ = $-\infty$\\
+\hspace*{2cm}$max\_der = max\_izq = 0$\\
+\hspace*{2cm}$for(i=0;i \leq alto;i++)$\\
+\hspace*{2.5cm}$suma = 0$\\
+\hspace*{2.5cm}$for(j=i;j \leq alto;i++)$\\
+\hspace*{3cm}$suma = suma + A[j]$\\
+\hspace*{3cm}$if suma \geq suma\_max$\\
+\hspace*{3.5cm}$suma\_max = suma$\\
+\hspace*{3.5cm}$max\_izq = i$\\
+\hspace*{3.5cm}$max\_der = j$\\
+\hspace*{2cm}$return (max\_izq, max\_der, suma\_max)$\\\\
+A continuaci\'on calcularemos el orden de complejidad de los tres algoritmos presentados anteriormente.\\\\\\\\
+\section{Experimentaci\'on y Resultados}C\'alculo del orden de complejidad del algoritmo de m\'aximo subarreglo cruzado:\\\\
+\centerline{
+\begin{tabular}{l c}
+   \hspace*{1cm}$MSC(A[bajo,...,medio,...,alto],alto,medio,bajo)$ & \\
+   \hspace*{2cm}$suma\_izq$ = $-\infty$ & $\Theta(1)$\\
+   \hspace*{2cm}$suma = max\_der = max\_izq = 0$ & ---\\
+   \hspace*{2cm}$for(i=medio;i \leq bajo+1;i--)$ & $\Theta(mid-bajo+2)$\\
+   \hspace*{2.5cm}$suma = suma + A[i]$ & $\Theta(1)$\\
+   \hspace*{2.5cm}$if suma \geq suma\_izq$ & ---\\
+   \hspace*{3cm}$max\_izq = i$ & $\Theta(1)$\\
+   \hspace*{2cm}$suma\_der$ = $-\infty$ & ---\\
+   \hspace*{2cm}$suma = 0$ & ---\\
+   \hspace*{2cm}$for(i=medio+1;i \leq alto+1;i++)$ & $\Theta(alto-bajo-1+2)$\\
+   \hspace*{2.5cm}$suma = suma + A[i]$ & $\Theta(1)$\\
+   \hspace*{2.5cm}$if suma \geq suma\_der$ & ---\\
+   \hspace*{3cm}$max\_der = i$ & ---\\
+   \hspace*{2cm}$return (max\_izq, max\_der, suma\_der + suma\_izq)$ & ---\\
+\end{tabular}}\\\\
+Podemos observar que la complejidad radica en los ciclos for, los cuales tienen rangos asignados con base a la parte del arreglo donde buscar\'an, es por eso que se puede juntar la soluci\'on de la complejidad al sumar los elementos de dichas complejidades, lo cual nos queda como $alto-bajo-3$. Sin embargo, $alto-bajo=n$, por eso la complejidad de este algoritmo es $\Theta(n)$.\\\\\newpage
+Calculo de la complejidad del algoritmo del m\'aximo subarreglo:\\\\
+\centerline{
+\begin{tabular}{l c}
+\hspace*{1cm}$MS(A[bajo,...,alto],alto,bajo)$ &\\
+\hspace*{2cm}$if$ $alto = bajo$&\\
+\hspace*{2.5cm}$return (bajo, alto, a[bajo])$& $\Theta(1)$\\
+\hspace*{2cm}$else$&\\
+\hspace*{2.5cm}$mitad = (alto+bajo)/2$&\\
+\hspace*{2.5cm}$(bajo\_izq, alto\_izq, suma\_izq) = MS(A, bajo, mitad)$ & $T(\frac{n}{2})$\\
+\hspace*{2.5cm}$(bajo\_der, alto\_der, suma\_der) = MS(A, mitad+1, alto)$& $T(\frac{n}{2})$\\
+\hspace*{2.5cm}$(bajo\_cruz, alto\_cruz, suma\_cruz) = MSC(A, bajo, mitad, alto)$& $\Theta(n)$\\
+\hspace*{2cm}$if$ $(suma\_der \geq suma\_izq$ and $suma\_der \geq suma\_cruz)$&\\
+\hspace*{2.5cm}$return (bajo\_der, alto\_der, suma\_der)$& $\Theta(1)$\\
+\hspace*{2cm}$else$ $if (suma\_izq \geq suma\_der$ and $suma\_izq \geq suma\_cruz)$&\\
+\hspace*{2.5cm}$return (bajo\_izq, alto\_izq, suma\_izq)$& $\Theta(1)$\\
+\hspace*{2cm}$else$&\\
+\hspace*{2.5cm}$return (bajo\_cruz, alto\_cruz, suma\_cruz)$& $\Theta(1)$\\
+\end{tabular}}\\\\
+Podemos observar que existe recursividad en nuestra funci\'on, por lo que procederemos a calcular la ecuaci\'on de recurrencia.\\\\
+\centerline{$T(n)= \left\{\begin{array}{lcc}
+             \Theta(1) &   si  & n = 1 \\
+             \\ 2T(\frac{n}{2}) + \Theta(n) &  si & n > 1\\
+             \end{array}
+   \right.$}\\\\
+Ahora resolveremos la recurrencia, como tenemos un cociente, debemos asegurarnos que nuestro resultado sea entero, para ello se propone el cambio de variable $n$ = $2^{k}$, donde $k$ = $\log_{2}(n)$, por lo que ahora resolveremos:\\\\
+\centerline{$T(n)$ = 2$T(\frac{n}{2})$+$C(n)$ = 2$T(2^{k-1})$+$C(2^{k})$}\\\\
+Haciendo iteraciones:\\\\
+\centerline{$T(2^{k})$ = 2(2$T(2^{k-2})$+$C(2^{k-1})$)+$C(2^{k})$}\\\\\\
+Llegando al t\'ermino i:\\\\
+\centerline{$T(2^{k})$ = $2^{i}$(($T(2^{k-i})$+$iC(2^{k}))$}\\\\
+Llegando a la condici\'on de frontera:\\\\
+\centerline{$T(2^{k})$ = $2^{k}$(($T(1)$+$kC(2^{k}))$}\\\\
+Finalmente:\\\\
+\centerline{$T(2^{k})$ = $c(n)$ + $\log_{2}(n)$ + $c(n)$}\\\\
+Por lo que este algoritmo tiene complejidad $\Theta(n\log_{10}(n))$.\\\\
+Calculo de complejidad del algoritmo por fuerza bruta:\\\\
+\hspace*{1cm}$MSFB(A[bajo,..,alto],alto,bajo)$\\
+\hspace*{2cm}$suma\_max$ = $-\infty$\\
+\hspace*{2cm}$max\_der = max\_izq = 0$\\
+\hspace*{2cm}$for(i=0;i \leq alto;i++)$\\
+\hspace*{2.5cm}$suma = 0$\\
+\hspace*{2.5cm}$for(j=i;j \leq alto;i++)$\\
+\hspace*{3cm}$suma = suma + A[j]$\\
+\hspace*{3cm}$if suma \geq suma\_max$\\
+\hspace*{3.5cm}$suma\_max = suma$\\
+\hspace*{3.5cm}$max\_izq = i$\\
+\hspace*{3.5cm}$max\_der = j$\\
+\hspace*{2cm}$return (max\_izq, max\_der, suma\_max)$\\\\
+Podemos observar que tenemos dos for anidados que recorren al mismo tiempo el arreglo, por lo que puede deducirse f\'acilmente que la complejidad de este algoritmo es $\Theta(n^{2})$.\\\newpage
+Para el desarrollo del programa se manejaron arreglos llenados de manera aleatoria con enteros de rango de entre -20 a 20.\\\\
+Captura de pantalla del programa original.\\\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/capmax.png}}\\\\
+Captura de pantalla del programa con fuerza bruta.\\\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/fuerzab.png}}\\\\
+\newpage
+Gr\'afica de la funci\'on del m\'aximo subarreglo, acotando con la funci\'on 10n (mostrada en color rojo).\\\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/capmsc.png}}\\\\
+Valores de funci\'on MSC:\\\\
+\centerline{
+\begin{tabular}{c c}
+   \bf{Longitud} & \bf{Valor}\\
+   1 & 1 \\
+   5 & 21 \\
+   10 & 46 \\
+   15 & 71 \\
+   20 & 96 \\
+   25 & 121 \\
+   30 & 146 \\
+   35 & 171 \\
+   40 & 196 \\
+   45 & 221 \\
+   50 & 246 \\
+ \end{tabular}}
+\newpage
+Gr\'afica de la funci\'on del m\'aximo subarreglo, acotando con la funci\'on 4n*log(n) (mostrada en color naranja).\\\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/capms.png}}\\\\
+Valores de funci\'on MS:\\\\
+\centerline{
+\begin{tabular}{c c}
+   \bf{Longitud} & \bf{Valor}\\
+   1 & 0 \\
+   5 & 11 \\
+   10 & 36 \\
+   15 & 60 \\
+   20 & 95 \\
+   25 & 126 \\
+   30 & 165 \\
+   35 & 215 \\
+   40 & 239 \\
+   45 & 285 \\
+   50 & 312 \\
+ \end{tabular}}
+\newpage
+Gr\'afica de la funci\'on del m\'aximo subarreglo implementado con fuerza bruta acotando con la funci\'on $n^{2}$ (mostrada en color gris).\\\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/capfbx.png}}\\\\
+Valores de funci\'on MSFB:\\\\
+\centerline{
+\begin{tabular}{c c}
+   \bf{Longitud} & \bf{Valor}\\
+   1 & 0 \\
+   5 & 18 \\
+   10 & 57 \\
+   15 & 123 \\
+   20 & 220 \\
+   25 & 331 \\
+   30 & 471 \\
+   35 & 831 \\
+   40 & 1052 \\
+ \end{tabular}}
+\newpage
+\section{Conclusiones}
+\textbf{Conclusi\'on General: }Pudimos ver que las implementaciones tuvieron distintos tiempos de ejecuci\'on, en el caso de la fuerza bruta a pesar de ser un s\'olo c\'odigo el que se ejecutaba, al recorrer todo el arreglo hace que tenga mayor complejidad, en caso de las funciones recursivas, recorrian todo el arreglo pero mediante bloques, por lo que se reduce la comnplejidad considerablemente.\\\\
+\textbf{Conclusi\'on Guti\'errez Povedano: }Al final de la pr\'actica puede constatar que un problema puede ser resuelto por un algoritmo y \'este puede ser optimizado para reducir considerablemente su orden de complejidad mejorando as\'i el tiempo que tarda en resolver el problema y reduciendo el n\'umero de instrucciones a ejecutadas, como en los algoritmos suma de sub arreglo m\'aximo resuelto por fuerza bruta con orden de complejidad cuadrática y el óptimo con complejidad líneal.\\\\
+\textbf{Conclusi\'on Reyes Valenzuela:}Pude notar que en este caso tuvimos que asociar m\'as de un valor de retorno a las funciones. Esto nos permite conocer toda la informaci\'on de la suma, como el inicio de la suma como el final. Adem\'as, es importante que todos los valores est\'en alternados con positivos y negativos, ya que en caso de ser todos positivos, la funci\'on devolver\'a el arreglo completo, mientras que en el anexo, se tratar\'a el caso donde todos los valores son negativos.\\\\
+\newpage
+\section{Anexo}
+\begin{enumerate}
+  \item ¿Qu\'e retorna la funci\'on de m\'aximo subarreglo cuando todos los valores del arreglo son valores enteros negativos?.
+\end{enumerate}
+Al ser todos negativos, una simple suma har\'a que el valor de esta sea m\'as negativa que la anterior, por lo que si se quiere encontrar una suma m\'axima, la funci\'on debe de regresar el valor del elemento m\'as pr\'oximo a cero (el menor negativo).\\\\
+Captura de pantalla de la ejecuci\'on del programa dado un arreglo con puros negativos. Se puede observar que nos devuelve como suma m\'axima el menor elemento del arreglo, en este caso el -2.\\\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/allneg.png}}\\
+\section{Bibliograf\'ia}
+Khanacademy.org (2018). [online] Available at: https://es.khanacademy.org/computing/computer-science/algorithms/merge-sort/a/divide-and-conquer-algorithms. [Accessed 29 Sep. 2018].\\\\
+Slideshare.net (2018). [online] Available at: https://www.geeksforgeeks.org/largest-sum-contiguous-subarray/. [Accessed  30 Sep. 2018].
+\end{document}
