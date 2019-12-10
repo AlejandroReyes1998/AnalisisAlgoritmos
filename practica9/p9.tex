@@ -1,0 +1,100 @@
+\documentclass[12pt,twoside]{article}
+\usepackage{amsmath, amssymb}
+\usepackage{amsmath}
+\usepackage[active]{srcltx}
+\usepackage{amssymb}
+\usepackage{amscd}
+\usepackage{makeidx}
+\usepackage{amsthm}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\usepackage{tikz}
+\usepackage{graphicx}
+\renewcommand{\baselinestretch}{1}
+\setcounter{page}{1}
+\setlength{\textheight}{21.6cm}
+\setlength{\textwidth}{14cm}
+\setlength{\oddsidemargin}{1cm}
+\setlength{\evensidemargin}{1cm}
+\pagestyle{myheadings}
+\thispagestyle{empty}
+\markboth{\small{Pr\'actica 9. Reyes Valenzuela Alejandro, Guti\'errez Povedano Pablo.}}{\small{.}}
+\date{}
+\begin{document}
+\centerline{\bf An\'alisis de Algoritmos, Sem: 2018-2, 3CV1, Pr\'actica 9, 21 de Noviembre de 2018}
+\centerline{}
+\centerline{}
+\begin{center}
+\Large{\textsc{Pr\'actica 9: Estrategia Greedy}}
+\end{center}
+\centerline{}
+\centerline{\bf {Reyes Valenzuela Alejandro, Guti\'errez Povedano Pablo.}}
+\centerline{}
+\centerline{Escuela Superior de C\'omputo}
+\centerline{Instituto Polit\'ecnico Nacional, M\'exico}
+\centerline{$areyesv11@gmail.com, gpovedanop@gmail.com$}
+\newtheorem{Theorem}{\quad Theorem}[section]
+\newtheorem{Definition}[Theorem]{\quad Definition}
+\newtheorem{Corollary}[Theorem]{\quad Corollary}
+\newtheorem{Lemma}[Theorem]{\quad Lemma}
+\newtheorem{Example}[Theorem]{\quad Example}
+\bigskip
+\textbf{Resumen:} En este reporte se utilizar\'a la Estrategia Greedy para desarrollar el algoritmo de codificaci\'on y decodificaci\'on de Huffman, y adicionalmente, mostraremos que con la codificaci\'on de Huffman, el archivo original se comprime.\\\\
+\centerline{{\bf Palabras Clave:}  Greedy, Huffman, Compresi\'ón.}
+\section{Introducci\'on}
+Cuando desarrollamos algoritmos, podemos utilizar diversas estrategias para poder solucionar nuestro problema de tal manera que se tenga la mayor optimizaci\'on posible. Una estrategia que nos permite abordar esto es la estrategia Greedy (o Voraz), la cual se basa en elegir la opci\'on de menor costo (sin saber si realmente llegaremos a nuestra soluci\'on o no) cada vez que tengamos que tomar una decisi\'on. Para ello desarrollaremos el algoritmo de Codificaci\'on y Decodificaci\'on de Huffman, algoritmo usado para la compresi\'on o encriptaci\'on de datos mediante el estudio de la frecuencia de aparici\'on de caracteres.
+\section{Conceptos B\'asicos}
+{\bf Estrategia Greedy:} Un algoritmo voraz (también conocido como \'avido, devorador o greedy) es una estrategia de b\'usqueda que consiste en elegir la opción óptima en cada paso local con la esperanza de llegar a una solución general óptima. Este esquema algorítmico es el que menos dificultades plantea a la hora de diseñar y comprobar su funcionamiento. Normalmente se aplica a los problemas de optimizaci\'on.\\\\\\ 
+Sin embargo, dicha estrategia  no nos garantiza obtener soluciones óptimas. Por lo tanto, siempre habr\'a que estudiar la correcci\'on del algoritmo para demostrar si las soluciones obtenidas son \'optimas o no.\\\\
+Para poder resolver un problema usando el enfoque greedy, tendremos que considerar seis elementos:\\
+\begin{enumerate}  
+\item Conjunto de candidatos (elementos seleccionables).
+\item Soluci\'on parcial (candidatos seleccionados).
+\item Funci\'on de selecci\'on (determina el mejor candidato del conjunto de candidatos seleccionables).
+\item Funci\'on de factibilidad (determina si es posible completar la soluci\'on parcial para alcanzar una soluci\'on del problema).
+\item Criterio que define lo que es una soluci\'on (indica si la soluci\'on parcial obtenida resuelve el problema).
+\item Funci\'on objetivo (valor de la soluci\'on alcanzada)
+\end{enumerate}
+{\bf Codificaci\'on Huffman:} El algoritmo consiste en la creación de un \'arbol binario que tiene cada uno de los s\'imbolos por hoja, y construido de tal forma que sigui\'endolo desde la ra\'iz a cada una de sus hojas se obtiene el c\'odigo Huffman asociado a \'el.\\\\
+La codificaci\'on Huffman usa un m\'etodo específico para elegir la representaci\'on de cada s\'imbolo, que da lugar a un c\'odigo prefijo que representa los caracteres m\'as comunes usando las cadenas de bits m\'as cortas, y viceversa.\\\\
+El algoritmo de construcción del árbol puede resumirse así:
+\begin{enumerate}  
+\item Crear un nodo hoja para cada s\'imbolo, asociando un peso seg\'un su frecuencia de aparici\'on e insertarlo en la lista ordenada ascendentemente.
+\item Mientras haya m\'as de un nodo en la lista:
+\begin{enumerate}  
+\item Eliminar los dos nodos con menor probabilidad de la lista.
+\item Crear un nuevo nodo interno que enlace a los nodos anteriores, asign\'andole como peso la suma de los pesos de los nodos hijos.
+\item Insertar el nuevo nodo en la lista, (en el lugar que le corresponda seg\'un el peso).
+\end{enumerate}
+\item El nodo que quede es el nodo ra\'iz del \'arbol.
+\end{enumerate}
+\section{Experimentaci\'on y Resultados}
+Para la prueba de este algoritmo se utiliza la cadena: "j'aime aller sur le bord de l'eau les jeudis ou les jours impairs".\\\\
+\textbf{Codificaci\'on:}\\\\
+\centerline{Ejecuci\'on del programa}\\
+\centerline{\includegraphics[width=10cm,height=10cm]{images/caphuff.png}}\\\\
+\centerline{Archivo Original}\\
+\centerline{\includegraphics[width=10cm,height=10cm]{images/original.png}}\\\\
+\centerline{Archivo Codificado}\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/codificado.png}}\\\\
+\centerline{Frecuencias}\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/frecuencias.png}}\\\\
+\centerline{Codificaci\'on Propuesta por el algoritmo}\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/codificacion.png}}\\\\
+\textbf{Decodificaci\'on:}\\\\
+\centerline{Archivo Decodificado}\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/decodificado.png}}\\\\
+\centerline{Tamano Archivo Original}\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/tamoriginal.png}}\\\\
+\centerline{Tamano Archivo Nuevo}\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/capdecod.png}}\\\\
+Con las \'ultimas dos capturas, nos damos cuenta de que el algoritmo de compresi\'on cumpli\'o su cometido, ya que gracias a la codificaci\'on/decodificaci\'on, el archivo nuevo es m\'as pequeño que el original.
+\section{Conclusiones}
+\textbf{Conclusi\'on General: }Pudimos observar que la estrategia Greedy nos sirvi\'o para comprender la funcionalidad del algoritmo, que a pesar de ser algo sencillo, su importancia para otro tipo de aplicaciones es importante si queremos codificar alg\'un tipo de archivo en espec\'ifico.\\\\
+\textbf{Conclusi\'on Guti\'errez Povedano: }La parte del algoritmo que mas se me dificult\'o fue la creación del \'arbol binario ya que al crear una rama con los dos caracteres de menor frecuencia se deb\'ia volver a insertar el nodo resultante en la lista pero en el orden correcto seg\'un el valor de frecuencia resultante.
+\\\\
+\textbf{Conclusi\'on Reyes Valenzuela:} En el caso del decodificador, ten\'ia que checar cu\'ando terminar de analizar, situaci\'on que me provoc\'o ciertos problemas al momento de programar, pero que sin embargo, pudieron ser sobrellevados.\\\\
+\section{Bibliograf\'ia}
+Universidad De Granada - Algoritmos Greedy (2018). [online] Available at: http://elvex.ugr.es/decsai/algorithms/slides/4 greedy.pdf [Accessed 21 Nov. 2018].\\\\
+D.A. Huffman, "A method for the construction of minimum-redundancy codes", Proceedings of the I.R.E., sept 1952, pp 1098-1102\\\\
+\end{document}
