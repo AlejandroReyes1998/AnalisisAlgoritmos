@@ -1,0 +1,84 @@
+\documentclass[12pt,twoside]{article}
+\usepackage{amsmath, amssymb}
+\usepackage{amsmath}
+\usepackage[active]{srcltx}
+\usepackage[spanish]{babel} % espanol
+\usepackage[utf8]{inputenc} % acentos sin codigo
+\usepackage{amssymb}
+\usepackage{amscd}
+\usepackage{makeidx}
+\usepackage{amsthm}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\usepackage{graphicx}
+\renewcommand{\baselinestretch}{1}
+\setcounter{page}{1}
+\setlength{\textheight}{21.6cm}
+\setlength{\textwidth}{14cm}
+\setlength{\oddsidemargin}{1cm}
+\setlength{\evensidemargin}{1cm}
+\pagestyle{myheadings}
+\thispagestyle{empty}
+\markboth{\small{Pr\'actica 10. Reyes Valenzuela Alejandro, Guti\'errez Povedano Pablo.}}{\small{.}}
+\date{}
+\begin{document}
+\centerline{\bf An\'alisis de Algoritmos, Sem: 2018-2, 3CV1, Pr\'actica 10, 3 de Diciembre de 2018}
+\centerline{}
+\centerline{}
+\begin{center}
+\Large{\textsc{Pr\'actica 10: Verificaci\'on en tiempo Polinomial}}
+\end{center}
+\centerline{}
+\centerline{\bf {Reyes Valenzuela Alejandro, Guti\'errez Povedano Pablo.}}
+\centerline{}
+\centerline{Escuela Superior de C\'omputo}
+\centerline{Instituto Polit\'ecnico Nacional, M\'exico}
+\centerline{$areyesv11@gmail.com, gpovedanop@gmail.com$}
+\newtheorem{Theorem}{\quad Theorem}[section]
+\newtheorem{Definition}[Theorem]{\quad Definition}
+\newtheorem{Corollary}[Theorem]{\quad Corollary}
+\newtheorem{Lemma}[Theorem]{\quad Lemma}
+\newtheorem{Example}[Theorem]{\quad Example}
+\bigskip
+\textbf{Resumen:} En este problema se tratar\'a el problema del ciclo Hamiltoniano, el cu\'al verificaremos de manera polinomial dado un grafo y un certificado, en donde comprobaremos si el cerificado es o no un ciclo Hamiltoniano del grafo propuesto previamente. 
+{\bf Palabras Clave:} Polinomial, Hamiltoniano, Cerfificado.
+\section{Introducci\'on}
+La teor\'ia de grafos puede parecer un \'area alejada al objeto de estudio de esta materia, sin embargo, existen varias aplicaciones que requieren ser solucionadas mediante el desarrollo de algoritmos, uno de ellos es el del ciclo Hamiltoniano, el cu\'al forma parte de la lista de los 21 problemas NP-completos de Karp, por lo que no existe una manera polinomial de determinar su complejidad, sin embargo, podemos realizar la verificaci\'on del grafo de manera polinomial, el cual es el objetivo de esta pr\'actica.
+\section{Conceptos B\'asicos}
+Un camino hamiltoniano, en el campo matemático de la teoría de grafos, es un camino de un grafo, una sucesión de aristas adyacentes, que visita todos los vértices del grafo una sola vez. Si además el último vértice visitado es adyacente al primero, el camino es un ciclo hamiltoniano.\\\\
+Existe una relación simple entre los problemas de encontrar un camino de Hamilton y un ciclo Hamiltoniano. En una dirección, el problema del camino Hamiltoniano para el grafo G es equivalente al problema ciclo Hamiltoniano en un grafo H obtenido de G mediante la adición de un nuevo vértice y de la conexión a todos los vértices de G. Por lo tanto, la búsqueda de un camino de Hamilton no puede ser significativamente más lenta (n el peor de los casos, como una función del número de vértices) que encontrar un ciclo de Hamilton.\\\\
+En la otra dirección, un grafo G tiene un ciclo de Hamilton utilizando la arista uv y sólo si el grafo H es obtenido por G mediante la sustitución de la arista por un par de vértices de grado 1, uno conectado a u y el otro conectado a v, tiene un camino de Hamilton. Por lo tanto, al tratar esta sustitución para todas las aristas incidentes hasta cierto vértice seleccionado de G, el problema del ciclo Hamiltoniano puede ser resuelto como máximo por n cálculos en la mayoría de los caminos Hamiltonianos, donde n es el número de vértices en el grafo.\\\\
+El problema del Ciclo hamiltoniano es también un caso especial del Problema del viajante, obtenido mediante el establecimiento de la distancia entre dos ciudades a uno si son adyacentes y dos en otro caso, y la verificación de que la distancia total recorrida es igual a n (si es así, la ruta es un circuito hamiltoniano; si no hay circuito Hamiltoniano a continuación entonces la ruta más corta será más larga).\\\\
+Algortimo:\\\\
+\hspace*{1cm}$while$ haya caminos sin recorrer\\
+\hspace*{2cm}generar el siguiente camino\\
+\hspace*{2cm}$if$ Hay bordes entre dos vértices consecutivos de este camino y hay un borde desde el último vértice a el primero\\
+\hspace*{2.5cm}$print$ configuraci\'on\\
+\hspace*{2.5cm}$break$\\\\
+Hay n! diferentes secuencias de vértices que pueden ser caminos Hamiltonianos dado un grafo de n vértices (y son, en un grafo completo), por lo que un algoritmo de búsqueda de fuerza bruta que pone a prueba todas las posibles secuencias serían muy lento. A medida que procede la búsqueda, un conjunto de reglas de decisión que clasifica las aristas indecisas, y determina si se debe detener o continuar la búsqueda.\\\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/algo.png}}
+Implementaci\'on del algoritmo. Nótese que debido al anidamiento de los for, el algoritmo que determina el certificado tiene complejidad cuadr\'atica. ($O(n^{2})$).
+\section{Experimentaci\'on y Resultados}
+\centerline{\includegraphics[width=10cm,height=6cm]{images/capham.png}}
+Ejecuci\'on del programa con un certificado válido y con uno no válido.\newpage
+\centerline{\includegraphics[width=10cm,height=6cm]{images/graph.png}}
+Gráfica de la función acotada con 6$n^{2}$ (En color verde), por lo que la complejidad del algoritmo mostrada de manera analítica se comprueba.\\\\
+Valores de funci\'on Hamilton\\\\
+\centerline{
+\begin{tabular}{c c}
+   \bf{Grafos} & \bf{Valor}\\
+   3 & 12 \\
+   4 & 20 \\
+   5 & 30 \\
+   6 & 42 \\
+   7 & 56 \\
+   8 & 72 \\
+ \end{tabular}}\\
+\section{Conclusiones}
+{\bf Conclusi\'on General:} En esta última práctica determinar la complejidad de este algoritmo fue sencillo, sin embargo para un término general se empieza a complicar, debido a que conforme van aumentando los grafos, las combinaciones posibles aumentan de igual manera.\\\\
+{\bf Gutérrrez Povedano:} Aunque el problema del ciclo hamiltoniano se un problema NP completo un algoritmo para verificar si es o no un ciclo dados un grafo y la ruta que sigue el supuesto ciclo(certificado) tiene una complejidad  de n cuadrada con n el numero de vertices del grafo.\\\\
+{\bf Reyes Valenzuela:} El programa fue relativamente de programar, ya que al momento de obtener los grafos, tuvimos que implementarlos de manera que podamos determinar de manera que las conexiones entre los mismos fuesen fáciles para leer, por lo que utilizamos una matriz para determinar los caminos posibles y finalmente, determinar el ciclo.\\\\
+\section{Bibliograf\'ia}
+Wikipedia (2018). [online] Available at: https://es.wikipedia.org/wiki/ProblemadelcaminoHamiltoniano [Accessed 2 Dic. 2018].\\\\
+Wikipedia (2018). [online] Available at: https://es.wikipedia.org/wiki/Caminohamiltoniano [Accessed 2 Dic. 2018].\\\\
+\end{document}
