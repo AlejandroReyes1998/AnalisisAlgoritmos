@@ -1,0 +1,141 @@
+\documentclass[12pt,twoside]{article}
+\usepackage{amsmath, amssymb}
+\usepackage{amsmath}
+\usepackage[active]{srcltx}
+\usepackage{amssymb}
+\usepackage{amscd}
+\usepackage{makeidx}
+\usepackage{amsthm}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\usepackage{graphicx}
+\renewcommand{\baselinestretch}{1}
+\setcounter{page}{1}
+\setlength{\textheight}{21.6cm}
+\setlength{\textwidth}{14cm}
+\setlength{\oddsidemargin}{1cm}
+\setlength{\evensidemargin}{1cm}
+\pagestyle{myheadings}
+\thispagestyle{empty}
+\markboth{\small{Pr\'actica 4. Reyes Valenzuela Alejandro, Guti\'errez Povedano Pablo.}}{\small{.}}
+\date{}
+\begin{document}
+\centerline{\bf An\'alisis de Algoritmos, Sem: 2018-2, 3CV1, Pr\'actica 1, 15 de Septiembre de 2018}
+\centerline{}
+\centerline{}
+\begin{center}
+\Large{\textsc{Pr\'actica 4:  Divide y Vencer\'as: QuickSort}}
+\end{center}
+\centerline{}
+\centerline{\bf {Reyes Valenzuela Alejandro, Guti\'errez Povedano Pablo.}}
+\centerline{}
+\centerline{Escuela Superior de C\'omputo}
+\centerline{Instituto Polit\'ecnico Nacional, M\'exico}
+\centerline{$areyesv11@gmail.com, gpovedanop@gmail.com$}
+\newtheorem{Theorem}{\quad Theorem}[section]
+\newtheorem{Definition}[Theorem]{\quad Definition}
+\newtheorem{Corollary}[Theorem]{\quad Corollary}
+\newtheorem{Lemma}[Theorem]{\quad Lemma}
+\newtheorem{Example}[Theorem]{\quad Example}
+\bigskip
+\textbf{Resumen:}En este reporte se abordar\'a el paradigma de divide y vencer\'as para la determinaci\'on de la complejidad del algoritmo Quicksort, tanto en la separaci\'on de los arreglos como en el propio ordenamiento.\\\\
+\centerline{{\bf Palabras Clave:}  Divide, Vence, Combina, Bloques.}
+\section{Introducci\'on}
+En la pr\'actica anterior utilizamos el paradigma de divide y vencer\'as para analizar la complejidad del algortimo MergeSort, ahora reutilizaremos el paradigma para analizar el algoritmo Quicksort, el cu\'al tambi\'en es un algoritmo de ordenamiento, y que tambi\'en se apoya de una funci\'on auxiliar para funcionar, por lo que calcularemos la complejidad de ambos tanto anal\'iticamente como gr\'aficamente.\\\\
+\section{Conceptos B\'asicos}
+El paradigma de Divide y Vencer\'as separa un problema en subproblemas que se parecen al problema original, de manera recursiva resuelve los subproblemas y, por \'ultimo, combina las soluciones de los subproblemas para resolver el problema original.\newpage
+Como divide y vencerás resuelve subproblemas de manera recursiva, cada subproblema debe ser m\'as pequeño que el problema original, y debe haber un caso base para los subproblemas.\\\\
+Para ello recurrimos a tres pasos fundamentales:
+\begin{itemize}
+  \item {\bf Divide:} Dividir el problema en un n\'umero de subproblemas que son instancias m\'as pequeñas del mismo problema.
+  \item {\bf Vence:} Resolver los subproblemas de manera recursiva. Si son los suficientemente peque\~{n}os, resolver los subproblemas como casos base.
+  \item {\bf Combina:} Juntar las soluciones de los subproblemas en la soluci\'on para el problema original.
+\end{itemize}
+Utilizaremos el paradigma para calcular el \'orden de complejidad del alogritmo Quicksort, el cual se auxilia de otra funci\'on denominada Partition que se encarga de separar arreglos.\\\\
+Algoritmo Partition\\\\
+\hspace*{1cm}$Partition(A[p,...,r],p,r)$\\
+\hspace*{2cm}$x$ = $A[r]$\\
+\hspace*{2cm}$i$ = $p-1$\\
+\hspace*{2cm}$for(j=p;j \leq r-1;j++)$\\
+\hspace*{2.5cm}$if$ $A[j]\leq x$\\
+\hspace*{3cm}$i++$\\
+\hspace*{3cm}$exchange(A[i],A[j])$\\
+\hspace*{2cm}$exchange(A[i+1],A[r])$\\
+\hspace*{2cm}$return$ $i+1$\\\\
+Algoritmo QuickSort\\\\\
+\hspace*{1cm}$QuickSort(A[p,...,r],p,r)$\\
+\hspace*{1cm}$if(p<r)$\\
+\hspace*{2cm}$q$ = $Partition(A,p,r)$\\
+\hspace*{2cm}$QuickSort(A,p,q-1)$\\
+\hspace*{2cm}$QuickSort(A,q+1,p)$\\\\
+A continuación obtendremos la complejidad de ambos algor\'itmos en te\'oricamente y pr\'acticamente. \newpage
+\section{Experimentaci\'on y Resultados}
+Calculando el \'orden de complejidad de Partition:\\\\
+\centerline{
+\begin{tabular}{l c}
+   \hspace*{1cm}$Partition(A[p,...,r],p,r)$ & \\
+   \hspace*{2cm}$x$ = $A[r]$ & $\Theta(1)$\\
+   \hspace*{2cm}$i$ = $p-1$ & ---\\
+   \hspace*{2cm}$for(j=p;j \leq r-1;j++)$ & $\Theta(r-p+1)$ \\
+   \hspace*{2.5cm}$if$ $A[j]\leq x$ & ---\\
+   \hspace*{3cm}$i++$ & ---\\
+   \hspace*{3cm}$exchange(A[i],A[j])$ & ---\\
+   \hspace*{2cm}$exchange(A[i+1],A[r])$ & $\Theta(1)$\\
+   \hspace*{2cm}$return$ $i+1$ & ---\\
+\end{tabular}}\\\\
+Podemos ver que el primer y \'ultimo bloque se ejecuta un n\'umero constante de veces cada vez que la funci\'on es llamada, por eso su complejidad es $\Theta(1)$.\\ En el caso del ciclo for el n\'umero de veces que se ejecutar\'a est\'a dado por los valores pivote (p y r) que representan el primer y el \'ultimo elemento del arreglo, por lo que est\'a definido por la cantidad de elementos del mismo, por lo que tenemos que r-p+1=n, por lo tanto $\Theta(r-p+1)$ = $\Theta(n)$. Al juntar la soluci\'on de todos los bloques concluimos que $Partition(A[p,...,r],p,r)$ $\epsilon$ $\Theta(n)$. Ahora calcularemos la complejidad de QuickSort:\\\\
+\centerline{
+\begin{tabular}{l c}
+    \hspace*{1cm}$QuickSort(A[p,...,r],p,r)$& \\
+    \hspace*{1cm}$if(p<r)$ &\\
+    \hspace*{2cm}$q$ = $Partition(A,p,r)$& $\Theta(1)$\\
+    \hspace*{2cm}$QuickSort(A,p,q-1)$ & $T(\frac{n}{2})$ \\
+    \hspace*{2cm}$QuickSort(A,q+1,p)$ & $T(\frac{n}{2})$\\
+\end{tabular}}\\\\
+Podemos observar que existe recursividad en nuestra funci\'on, por lo que procederemos a calcular la ecuaci\'on de recurrencia. Para ello consideramos que nuestros arreglos son divididos en dos de la misma longitud.\\\\
+\centerline{$T(n)= \left\{\begin{array}{lcc}
+             \Theta(1) &   si  & n = 1 \\
+             \\ 2T(\frac{n}{2}) + \Theta(n) &  si & n > 1\\
+             \end{array}
+   \right.$}\\\\
+Ahora resolveremos la recurrencia, como tenemos un cociente, debemos asegurarnos que nuestro resultado sea entero, para ello se propone el cambio de variable $n$ = $2^{k}$, donde $k$ = $\log_{2}(n)$, por lo que ahora resolveremos:\\\\
+\centerline{$T(n)$ = 2$T(\frac{n}{2})$+$C(n)$ = 2$T(2^{k-1})$+$C(2^{k})$}\\\\\newpage
+Haciendo iteraciones:\\\\
+\centerline{$T(2^{k})$ = 2(2$T(2^{k-2})$+$C(2^{k-1})$)+$C(2^{k})$}\\\\\\
+Llegando al t\'ermino i:\\\\
+\centerline{$T(2^{k})$ = $2^{i}$(($T(2^{k-i})$+$iC(2^{k}))$}\\\\
+Llegando a la condici\'on de frontera:\\\\
+\centerline{$T(2^{k})$ = $2^{k}$(($T(1)$+$kC(2^{k}))$}\\\\
+Finalmente:\\\\
+\centerline{$T(2^{k})$ = $c(n)$ + $\log_{2}(n)$ + $c(n)$}\\\\
+Por lo que QuickSort $\epsilon$ $\Theta(n\log_{10}(n))$. Ahora comprobaremos lo establecido mediante gr\'aficas:
+Algoritmo Partition (comparando los tiempos de longitud 1 a 10 con n=6n)\\\\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/partition.png}}\\\\\newpage
+Algoritmo QuickSort (comparando los tiempos de longitud 1 a 10 con n=2nlog(n)\\\\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/quicksort.png}}\\\\
+Podemos ver que las funciones propuestas acotan a los puntos de las funciones Partition y Quicksort, por lo que comprobamos que QuickSort $\epsilon$ $\Theta(n\log_{10}(n))$ y que Partition $\epsilon$ $\Theta(n)$.\\\\
+Ahora, propondremos el arreglo [13,10,9,8,7,5,4,3,2,1] para graficar Quicksort. Para graficar en este caso quitaremos elementos de derecha a izquierda para las longitudes del arreglo. Acotamos con la funci\'on $n^{2}$\\\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/quicksortdecreciente.png}}\\\\
+Podemos observar que la función cuando tiene sus elementos ordenados de manera decreciente tiene complejidad cuadr\'atica.\\\\\newpage
+Prueba de escritorio:\\\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/capquick.png}}\\\\
+\section{Conclusiones}
+\textbf{Conclusi\'on General: }Observamos que el paradigma fue bastante \'util, ya que nos ahorramos el an\'alisis l\'inea por l\'inea y nos enfocamos \'unicamente a los bloques clave, siend en este caso los ciclos los que nos permitieron saber la complejidad de Partition y la recurrencia logar\'itmica para Quicksort. Sin embargo, se consider\'o un caso donde la complejidad para Quicksort sea de la forma solicitada en la pr\'actica, ya que existen casos donde la complejidad se puede tornar cuadr\'atica.\\\\
+\textbf{Conclusi\'on Guti\'errez Povedano: }Utilizando el paradigma divide y vencerás se puede resolver un problema y generar un algoritmo cuya complejidad sea menor como en el caso del algoritmo merge sort el cual tiene un orden de complejidad $\Theta$(n*log(n)) para realizar el ordenamiento de forma ascendente de un arreglo de enteros el cual es menor al orden de complejidad de otros algoritmos que resuelven el mismo problema por ejemplo el algoritmo burbuja cuya complejidad en el peor caso es $O(n^{2})$.\\\\
+\textbf{Conclusi\'on Reyes Valenzuela:}En este algoritmo tuve algunos problemas para el caso del exchange, ya que originalmente s\'olo utilizaba los valores de las variables para realizarlos, sin embargo, al momento de realizar el ordenamiento, no los tomaba en cuenta y era como si no hubiese hecho nada, por lo que utilic\'e apuntadores para solucionar esto. Por otro lado, el algoritmo tiene un funcionamiento similar al propuesto en la pr\'actica anterior, por lo que se esperaba que tuviesen la misma complejidad.\\\\
+\section{Anexo}
+Resolver los siguientes problemas:
+\begin{enumerate}
+  \item Qu\'e valor de q retorna Partition cuando todos los elementos en el arreglo A[p, ..., r] tienen el mismo valor?.
+  \item Cu\'al es el tiempo de ejecuci\'on de QuickSort cuando todos los elementos del arreglo tienen el mismo valor?.
+\end{enumerate}
+Soluciones
+\begin{enumerate}
+  \item Debido a que los valores son iguales, el contador de la funci\'on en p inicia en teor\'ia en -1 (dado que el \'indice p siempre inicia en 0) la condic\'ion del if siempre se cumnplir\'a, debido a esto aumentar\'a por cada elemento, al ser r el \'indice n-1, p aumentar\'a n-1 veces, por lo que podemos decir que al final Partition retornar\'a el mismo valor asociado a r.
+  \item El tiempo de ejecuci\'on es lineal, dado que el n\'umero de comparaciones ser\'a de alguna regido \'unicamente por el tama$~{n}$o del arreglo y no por los valores de este.
+\end{enumerate}
+\centerline{\includegraphics[width=10cm,height=6cm]{images/anexo1.png}}
+\section{Bibliograf\'ia}
+Khanacademy.org (2018). [online] Available at: https://es.khanacademy.org/computing/computer-science/algorithms/merge-sort/a/divide-and-conquer-algorithms. [Accessed 13 Sep. 2018].\\\\
+Slideshare.net (2018). [online] Available at: https://es.slideshare.net/balamoorthy39/divide-and-conquer-quick-sort. [Accessed 13 Sep. 2018].
+\end{document}
