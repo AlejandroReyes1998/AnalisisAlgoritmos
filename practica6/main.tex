@@ -1,0 +1,171 @@
+\documentclass[12pt,twoside]{article}
+\usepackage{amsmath, amssymb}
+\usepackage{amsmath}
+\usepackage[active]{srcltx}
+\usepackage{amssymb}
+\usepackage{amscd}
+\usepackage{makeidx}
+\usepackage{amsthm}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\usepackage{graphicx}
+\renewcommand{\baselinestretch}{1}
+\setcounter{page}{1}
+\setlength{\textheight}{21.6cm}
+\setlength{\textwidth}{14cm}
+\setlength{\oddsidemargin}{1cm}
+\setlength{\evensidemargin}{1cm}
+\pagestyle{myheadings}
+\thispagestyle{empty}
+\markboth{\small{Pr\'actica 6. Reyes Valenzuela Alejandro, Guti\'errez Povedano Pablo.}}{\small{.}}
+\date{}
+\begin{document}
+\centerline{\bf An\'alisis de Algoritmos, Sem: 2018-2, 3CV1, Pr\'actica 6, 10 de Octubre de 2018}
+\centerline{}
+\centerline{}
+\begin{center}
+\Large{\textsc{Pr\'actica 6: Algoritmo de Strassen}}
+\end{center}
+\centerline{}
+\centerline{\bf {Reyes Valenzuela Alejandro, Guti\'errez Povedano Pablo.}}
+\centerline{}
+\centerline{Escuela Superior de C\'omputo}
+\centerline{Instituto Polit\'ecnico Nacional, M\'exico}
+\centerline{$areyesv11@gmail.com, gpovedanop@gmail.com$}
+\newtheorem{Theorem}{\quad Theorem}[section]
+\newtheorem{Definition}[Theorem]{\quad Definition}
+\newtheorem{Corollary}[Theorem]{\quad Corollary}
+\newtheorem{Lemma}[Theorem]{\quad Lemma}
+\newtheorem{Example}[Theorem]{\quad Example}
+\bigskip
+\textbf{Resumen:}En este reporte se analizar\'a el algoritmo de producto de matrices de Strassen, donde calcularemos el orden de complejidad de manera te\'orica y lo comprobaremos de manera gr\'afica.\\\\
+\centerline{{\bf Palabras Clave:}  Matriz,Producto,Bloques,Straessen.}
+\section{Introducci\'on}
+Cuando se tiene que realizar productos de matrices, existen bastantes factores a considerar, como el tama$~n$o de las mismas y el n\'umero de operaciones que se realizar\'an. \\\\
+Es por ello que el algoritmo convencional tiende a tener complejidad $\Theta$ $\epsilon$ $n^{3}$, ya que se recorre el arreglo para obtener la suma de una posici\'on mediante un ciclo for y se usan otros dos para repetir dicho proceso para todos los elementos de la matriz. En esta pr\'actica analizaremos un algoritmo alternativo, el cual a pesar de no ser el \'optimo, mejora bastante el tiempo de ejecuci\'on.
+\section{Conceptos B\'asicos}
+El producto de matrices se define con dos matrices A y B de dimensiones $m*n$ y $n*p$, respectivamente, se propone su producto $A*B$ como la matriz de dimensi\'on $m*p$ tal que el elemento de la posici\'on fila $i$ y columna $j$ es el resultado de los vectores fila $i$ de A y columna $j$ de B. Para que se pueda realizar se tienen que cumplir las siguientes condiciones:\newpage
+Si las matrices son:\\\\
+\centerline{$A$ = $(a_{ij})$, $1 \leq i \leq m$ , $1 \leq j \leq n$}
+\centerline{$B$ = $(b_{ij})$, $1 \leq i \leq n$ , $1 \leq j \leq p$}\\
+Entonces el producto es:\\\\
+\centerline{$A*B$ = $(m_{ij})$, $1 \leq i \leq m$ , $1 \leq j \leq p$}
+Donde:\\\\
+\centerline{$m_{ij}$ = $\sum_{k=1}^{n}$ $a_{i,k}*b_{i,k}$, $1 \leq i \leq m$ , $1 \leq j \leq p$}\\\\
+El Algoritmo de Schonhage-Strassen es un algoritmo que consiste en la multiplicaci\'on de Matrices. Es asint\'oticamente m\'as r\'apido que el algoritmo de multiplicaci\'an de matrices est\'andar, pero m\'as lento que el algoritmo m\'as r\'apido conocido, y es \'util en la pr\'actica para matrices grandes. Para mostrar el algoritmo propondremos dos matrices cuadradas $A$ y $B$ de tama$~n$o n igual a una potencia de $Z$ y lo compararemos con un algoritmo similar para calcular el orden de complejidad del propio algoritmo de Strassen:\\\\
+\centerline{
+A = 
+$
+\begin{bmatrix}
+    a_{11}  & a_{12}\\
+    a_{21} & a_{22}\\
+\end{bmatrix}
+$
+B = 
+$
+\begin{bmatrix}
+    b_{11}  & b_{12}\\
+    b_{21} & b_{22}\\
+\end{bmatrix}
+$
+C = 
+$
+\begin{bmatrix}
+    c_{11}  & c_{12}\\
+    c_{21} & c_{22}\\
+\end{bmatrix}
+$}\\\\
+Donde:\\\\
+\centerline{$c_{11}$ = $a_{11}$*$b_{11}$+$a_{12}$*$b_{21}$}
+\centerline{$c_{12}$ = $a_{11}$*$b_{12}$+$a_{12}$*$b_{21}$}
+\centerline{$c_{21}$ = $a_{21}$*$b_{11}$+$a_{22}$*$b_{11}$}
+\centerline{$c_{22}$ = $a_{21}$*$b_{12}$+$a_{22}$*$b_{22}$}\\\\
+Ahora se mostrar\'a un algoritmo recursivo que nos ayudar\'a a calcular el orden de complejidad.\\\\
+\hspace*{1cm}$PMR(A[...],B[...],n)$\\
+\hspace*{1cm}$if(n==2)$\\
+\hspace*{2cm}Regresa el producto usual de matrices\\\\
+\hspace*{1cm}$else$\\
+\hspace*{2cm}$c_{11}$ = $PMR(A_{11},B_{11},n/2)$+$PMR(A_{12},B_{12},n/2)$\\
+\hspace*{2cm}$c_{12}$ = $PMR(A_{11},B_{12},n/2)$+$PMR(A_{12},B_{22},n/2)$\\
+\hspace*{2cm}$c_{21}$ = $PMR(A_{21},B_{11},n/2)$+$PMR(A_{22},B_{11},n/2)$\\
+\hspace*{2cm}$c_{22}$ = $PMR(A_{21},B_{12},n/2)$+$PMR(A_{22},B_{22},n/2)$\\
+Donde proponemos la variable $a$ = $\#$N\'umero de productos y $b$=$\#$N\'umero de sumas.\\
+Calculando la recurrecncia:\\\\
+\centerline{$T(n)= \left\{\begin{array}{lcc}
+             a+b &   si  & n = 2 \\
+             \\ a*T(\frac{n}{2}) + b*(\frac{n}{2})^{2} &  si & n > 2\\
+             \end{array}
+   \right.$}\\\\
+Resolviendo mediante recursividad hacia adelante (Suponiendo s\'olo matrices cuadradas en potencias de dos):\\\\
+\centerline{$T(n=2)$=$a+b$}\\\\
+\centerline{$T(n=4)$=$a$*$T(4/2)$+$b*(\frac{4}{2})^{2}$=$a(a+b)+b*(\frac{4}{2})^{2}$}\\\\
+\centerline{$T(n=8)$=$a$*$T(8/2)$+$b*(\frac{8}{2})^{2}$=$a^{3}+a^{2}*b+a*b*(\frac{4}{2})^{2}+b*(\frac{8}{2})^{2}$}\\\\
+\centerline{...}\\\\
+\centerline{$T(n=2^{k})$=$a^{k}+a^{k-1}*b+a^{k-2}*b*(\frac{4}{2})^{2}+b*(\frac{4}{2})^{2}+...+b*(\frac{2^{k}}{2})^{2}$}\\\\
+Siendo el \'ultimo resultado igual a:\\\\
+\centerline{$=a^{k}$+$b*\sum_{i=0}^{k=1}$ $a^{i}*(\frac{2^{k-i}}{2})$}\\\\
+Desarrollando la sumatoria (n\'otese que se obtiene una serie geom\'etrica, por lo que se trabaja con ella):\\\\
+\centerline{$=a^{k}$+$\frac{b}{4} * \sum_{i=0}^{k=1}$ $a^{i}*(\frac{4^{k}}{4^{i}})$}\\\\
+\centerline{$=a^{k}$+$\frac{b*4^{k}}{4} * \sum_{i=0}^{k=1}$ $(\frac{a}{4})^{i}$}\\\\
+\centerline{$=a^{k}$+$\frac{b*4^{k}}{4}$ * $(\frac{(\frac{a}{4})^{k}-1}{(\frac{a}{4})-1})$}\\\\
+\centerline{$=a^{k}$+$\frac{b*4^{k}}{4}$ * $(\frac{4*(a^{k}-4^{k})}{4^{k}*(a-4)})$}\\\\
+\centerline{$=a^{k}$+$b$ * $(\frac{a^{k}}{a-4} - \frac{4^{k}}{a-4})$}\\\\
+Acontando (para $a-4>1$):\\\\
+\centerline{$=a^{k}$+$b$ * $(\frac{a^{k}}{a-4} - \frac{4^{k}}{a-4})$ $\leq$ $a^{k}$+$b$ * $(\frac{a^{k}}{a-4})$}\\\\
+Por lo que tenemos que la complejidad de este algoritmo es $\Theta(a^{k})$.\newpage
+Ahora regresaremos a t\'erminos de $n$:\\\\
+\centerline{$\Theta(a^{k})=\Theta(a^{\log{n}})=\Theta(n^{\log{a}})=\Theta(n^{\log_{2}{a}})$}\\\\
+Podemos observar que la complejidad est\'a dada por el n\'umeroo de productos que realice la funci\'on. En el caso de la funci\'on original son ocho, por lo que tenemos que $\Theta(n^{\log_{2}{a}})=\Theta(n^{\log_{2}{8}})=\Theta(n^{3})$.\\\\
+Retomando nuestro prop\'osito original, el algoritmo de Straessen nos permite definir los elementos de la matriz $C$ de la siguiente manera:\\\\
+\centerline{$C_{11}$ = $S_{1}+S_{2}-S_{4}+S_{6}$}\\
+\centerline{$C_{12}$ = $S_{4}+S_{5}$}
+\centerline{$C_{21}$ = $S_{6}+S_{2}$}
+\centerline{$C_{22}$ = $S_{2}-S_{3}+S_{5}-S_{7}$}
+Donde $S_{1,...,7}$ es igual a:\\\\
+\centerline{$S_{1}$ = $(A_{12}-A_{22})(B_{21}+B_{22})$}
+\centerline{$S_{2}$ = $(A_{11}-A_{22})(B_{11}+B_{22})$}
+\centerline{$S_{3}$ = $(A_{11}-A_{21})(B_{11}+B_{12})$}
+\centerline{$S_{4}$ = $(A_{11}+A_{12})(B_{22})$}
+\centerline{$S_{5}$ = $(A_{11})(B_{12}+B_{22})$}
+\centerline{$S_{6}$ = $(A_{22})(B_{21}-B_{11})$}
+\centerline{$S_{7}$ = $(A_{21}+A_{22})(B_{11})$}\\\\
+Podemos observar que en este caso se realizan s\'olo siete productos, por lo que si retomamos el resultado del algoritmo original y sustituimos con el valor de productos de este tenemos que $\Theta(n^{\log_{2}{a}})=\Theta(n^{\log_{2}{7}})$, donde el sustituimos el valor truncado del logaritmo, por lo que finalmente $\Theta(n^{2.8})$.\\\\
+Este algoritmo tiene complejidad menor que los convencionales debido a la reducci\'on de operaciones.\\
+\section{Experimentaci\'on y Resultados}
+Ejecuci\'on de programa.
+\centerline{\includegraphics[width=6cm,height=10cm]{images/capstraesen.png}}\\\\
+Gr\'afica de la funci\'on de producto de Strassen acotando con la funci\'on $10n^{2.8}$ (mostrada en color verde).\\\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/strass.png}}\\\\\newpage
+Valores de funci\'on Strassen\\\\
+\centerline{
+\begin{tabular}{c c}
+   \bf{Tama$~{n}$o} & \bf{Valor}\\
+   2 & 1 \\
+   4 & 65 \\
+   8 & 609 \\
+   16 & 4801 \\
+   32 & 35681 \\
+   64 & 257985 \\
+ \end{tabular}}\\
+Gr\'afica de la funci\'on de producto de Strassen acotando con la funci\'on del algoritmo convencional (mostrada en color rojo).\\\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/cubstrass.png}}\\\\
+Valores de funci\'on tradicional (retomamos la gr\'afica generada anteriormente)\\\\
+\centerline{
+\begin{tabular}{c c}
+   \bf{Tama$~{n}$o} & \bf{Valor}\\
+   2 & 15 \\
+   4 & 85 \\
+   8 & 731\\
+   16 & 5021 \\
+   32 & 39825 \\
+   64 & 266305	\\
+ \end{tabular}}\\
+Podemos notar que es muy poca la diferencia de complejidad de ambos algoritmos, tanto en la primera gr\'afica como en la segundo, esto se debe a que este problema no depende de los datos que maneja, si no de cu\'antas veces tendr\'a que realizar tanto las sumas como los productos necesarios para llegar a un resultado. A pesar de realizar la misma funci\'on, uno es mejor que el otro, por muy poco.
+\section{Conclusiones}
+\textbf{Conclusi\'on General: } El producto de matrices es una operaci\'on que puede ser tan compleja o sencilla dependiendo de las propias matrices en s\'i, es por ello que mientras que un algoritmo se centra en \'unicamente ir realizando las operaciones, el otro divide matrices y busca ir reduciendo el tama$~{n}$o de estas para ir realizando cada vez menos operaciones, es por ello que a pesar de que en alg\'un momento si se utiliza el m\'etodo tradicional, se usa menos en el de Strassen.\\\\
+\textbf{Conclusi\'on Guti\'errez Povedano: }Al t\'ermino de la pr\'actica podemos concluir que el algoritmo de strassen tiene un orden de complejidad menor a la multiplicaci\'on de matrices normal, pero al estar limitado a matrices cuadradas de tama$~{n}$o potencia de 2 su utilidad se ve bastante reducida.\\\\
+\textbf{Conclusi\'on Reyes Valenzuela:}Tuve problemas al codificar el programa, ya que exist\'ian ciertas operaciones que requer\'ian utilizar las submatrices para obtener otra y a su vez volver a llamar el algoritmo para continuar, sin embargo, si pude entender el porqu\'e de la complejidad de ambos algoritmos, al igual que se demostr\'o tanto de manera te\'orica como de manera pr\'actica.
+\section{Bibliograf\'ia}
+Matesfacil.com (2018). [online] Available at: https://www.matesfacil.com/matrices/resueltos-matrices-producto.html [Accessed 10 Oct. 2018].\\\\
+Wikipedia.org (2018). [online] Available at: https://es.wikipedia.org/wiki/Algoritmo-de-Schonhage-Strassen. [Accessed 10 Oct. 2018].
+\end{document}
