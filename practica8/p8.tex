@@ -1,0 +1,113 @@
+\documentclass[12pt,twoside]{article}
+\usepackage{amsmath, amssymb}
+\usepackage{amsmath}
+\usepackage[active]{srcltx}
+\usepackage{amssymb}
+\usepackage{amscd}
+\usepackage{makeidx}
+\usepackage{amsthm}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\usepackage{graphicx}
+\renewcommand{\baselinestretch}{1}
+\setcounter{page}{1}
+\setlength{\textheight}{21.6cm}
+\setlength{\textwidth}{14cm}
+\setlength{\oddsidemargin}{1cm}
+\setlength{\evensidemargin}{1cm}
+\pagestyle{myheadings}
+\thispagestyle{empty}
+\markboth{\small{Pr\'actica 8. Reyes Valenzuela Alejandro}}{\small{.}}
+\date{}
+\begin{document}
+\centerline{\bf An\'alisis de Algoritmos, Sem: 2018-2, 3CV1, Pr\'actica 8, 14 de Noviembre de 2018}
+\centerline{}
+\centerline{}
+\begin{center}
+\Large{\textsc{Pr\'actica 8:  Multiplicaci\'on de una Secuencia de Matrices}}
+\end{center}
+\centerline{}
+\centerline{\bf {Reyes Valenzuela Alejandro}}
+\centerline{}
+\centerline{Escuela Superior de C\'omputo}
+\centerline{Instituto Polit\'ecnico Nacional, M\'exico}
+\centerline{$areyesv11@gmail.com$}
+\newtheorem{Theorem}{\quad Theorem}[section]
+\newtheorem{Definition}[Theorem]{\quad Definition}
+\newtheorem{Corollary}[Theorem]{\quad Corollary}
+\newtheorem{Lemma}[Theorem]{\quad Lemma}
+\newtheorem{Example}[Theorem]{\quad Example}
+\bigskip
+\textbf{Resumen:} En este reporte se abordar\'a el desarrollo de un programa mediante la programaci\'on din\'amica, la cu\'al nos va a permitir determinar el caso \'optimo para la resoluci\'oin de un problema determinado, esto con el fin de evitar la b\'usqueda de  todas las combinaciones posibles y s\'olo enfocarnos en la que nos interesa (la \'optima).\\\\
+\centerline{{\bf Palabras Clave:} Programaci\'on,Din\'amica, Matrices,\'Optimo.}
+\section{Introducci\'on}
+Cuando debemos de solucionar problemas, en varios casos utilizamos la primera soluci\'on que encontramos, Sin importar el costo o tiempo que pueda llevar, por lo que normalmente se tienen que analizar varias opciones para determinar cu\'al se adapta mejor a lo que estamos buscando. \\\\
+Sin embargo, puede darse el caso de que el n\'umero de opciones crece considerablemente, por lo que nos es imposible analizarlos todos desde cero; es por este motivo que la programaci\'on din\'amica busca dar soluci\'on a los problemas con base a los problemas del mismo tipo resueltos previamente, esto con el fin de evitar repeticiones en operciones que nos quiten tiempo y enfocarnos en la b\'usqueda de la soluci\'on solicitada.\\\\ 
+En esta pr\'actica se abordar\'a un ejemplo, cuyo funcionamiento se observar\'a tanto de manera te\'orica como experimental.
+\section{Conceptos B\'asicos}
+En inform\'atica, la programaci\'on din\'amica es un m\'etodo para reducir el tiempo de ejecuci\'on de un algoritmo mediante la utilizaci\'on de subproblemas superpuestos y subestructuras \'optimas.\\\\
+Conviene resaltar que a diferencia de la programaci\'on lineal, el modelado de problemas de programaci\'on din\'amica no sigue una forma est\'andar. As\'i, para cada problema ser\'a necesario especificar cada uno de los componentes que caracterizan un problema de programaci\'on din\'amica.\\\\
+El procedimiento general de resoluci\'on de estas situaciones se divide en el an\'alisis recursivo de cada una de las etapas del problema, en orden inverso, es decir comenzando por la \'ultima y pasando en cada iteraci\'on a la etapa antecesora. El an\'alisis de la primera etapa finaliza con la obtenci\'on del \'optimo del problema. Para esta pr\'actica utilizaremos dicho an\'alisis para obtener el producto de matrices \'optimo, es decir, en donde se realice el menor n\'umero de operaciones, para ello en vez de analizar todos los casos posibles en los que podemos multiplicar nuestra matriz, se analizar\'a un algoritmo que nos devuelve de manera directa nuestro producto \'optimo:\\\\
+\hspace*{1cm}$SecuenciaMatrices(P)$\\
+\hspace*{1.5cm}n=p.length\\
+\hspace*{1.5cm}Sean $m[1,...,n][2,...,n]$ y $S[1,...,n-1][1,...,n-1]$ dos tablas\\
+\hspace*{1.5cm}$for$ i $=$ 0 to n\\
+\hspace*{2cm}$m[i][j]=0$\\
+\hspace*{1.5cm}$for$ l $=$ 2 to n\\
+\hspace*{2cm}$for$ i $=$ 1 to $n-l+1$\\
+\hspace*{2.5cm}$j=i+l-1$\\
+\hspace*{2.5cm}$m[i][j]$ $=$ + $\infty$\\
+\hspace*{2.5cm}$for$ k $=$ i to $j-1$\\
+\hspace*{3cm}$q=m[i][k]+m[k+1][j]+P_{i-1}*P_{k}*P_{j}$\\
+\hspace*{3cm}$if$ $q$ $<$ $m[i][j]$\\
+\hspace*{3.5cm}$m[i][j]$ $=$ $q$\\
+\hspace*{3.5cm}$S[p][j]$ $=$ $k$\\
+\hspace*{1cm}$return$ m y S\\
+\newpage
+El algoritmo anterior genera la configuraci\'on \'optima, por lo que ahora necesitamos otro para imprimir dicha configuraci\'on:\\\\
+\hspace*{1cm}$ImprimeOptimo(S,i,j)$\\
+\hspace*{1cm}$if$ $i$ $==$ $j$\\
+\hspace*{1.5cm}$return$ $A_{i}$\\
+\hspace*{1cm}$else$\\
+\hspace*{1.5cm}Imprime $($\\
+\hspace*{1.5cm}$ImprimeOptimo(S,i,S[i,j])$\\
+\hspace*{1.5cm}$ImprimeOptimo(S,S[i,j]+1,j)$\\
+\hspace*{1.5cm}Imprime $)$\\
+\section{Experimentaci\'on y Resultados}
+Ejecuci\'on del Programa
+\centerline{\includegraphics[width=10cm,height=6cm]{images/capmatrx.png}}\\\\
+Podemos observar que nos devuelve la configuraci\'on \'optima de matrices con base a un arreglo, por lo que a continuaci\'on corrobaremos \'este hecho de manera te\'orica.\\\\
+Tomaremos los casos A=${10,5,4,6,5}$ y A=${3,6,8,2,4}$ para comprobar que la configuraci\'on obtenida es la \'optima.\\\\\newpage
+Primer caso A=${10,5,4,6,5}$:\\\\
+($A_{1}$ $A_{2}$)($A_{3}$ $A_{4}$) = N\'umero de operaciones = 520\\
+$A_{1}$ ($A_{2}$ ($A_{3}$ $A_{4}$)) = N\'umero de operaciones = 470\\
+$A_{1}$ (($A_{2}$ $A_{3}$) $A_{4}$ )) = N\'umero de operaciones = 650\\
+(($A_{1}$ $A_{2}$ ) $A_{3}$ )) $A_{4}$ ⇒ N\'umero de operaciones = 740\\
+($A_{1}$ ($A_{2}$ $A_{3}$)) $A_{4}$ = N\'umero de operaciones = 720\\\\
+Podemos observar que el n\'umero menor es el 470, resultado que fue arrojado por el programa, al igual que su configuraci\'on correspondiente, por lo que el programa cumpli\'o con su cometido en este caso.\\\\
+Primer caso A=${3,6,8,2,4}$:\\\\
+($A_{1}$ $A_{2}$)($A_{3}$ $A_{4}$) = N\'umero de operaciones = 304\\
+$A_{1}$ ($A_{2}$ ($A_{3}$ $A_{4}$)) = N\'umero de operaciones = 470\\
+$A_{1}$ (($A_{2}$ $A_{3}$) $A_{4}$ )) = N\'umero de operaciones = 328\\
+(($A_{1}$ $A_{2}$ ) $A_{3}$ )) $A_{4}$ ⇒ N\'umero de operaciones = 216\\
+($A_{1}$ ($A_{2}$ $A_{3}$)) $A_{4}$ = N\'umero de operaciones = 156\\\\
+De la misma manera, el n\'umero menor fue el mismo que el arrojado por el programa, en este caso el 156, cuya configuraci\'on fue impresa por el programa, por lo que nuevamente corroboramos que la parentizaci\'on propuesta fue la de menor n\'umero de operaciones.
+\section{Conclusiones}
+{\bf{Reyes Valenzuela Alejandro:}}Con la programaci\'on din\'amica pude observar que podemos analizar problemas de una mejor manera, ya que evitamos analizar todos los casos y en vez de eso reutilizamos valores que ya conocemos para poder resolver problemas de mayor complejidad de una manera m\'as sencilla. Adicionalmente, este problema en concreto no fue dif\'icil de programar, por lo que \'unicamente se procedi\'o a calcular los otros resultados de manera te\'orica para comprobar los resultados.\newpage
+\section{Anexo}
+Documente que la ecuaci\'on de recurrencia P(n) = $\sum_{k=1}^{n-1}P(k)P(n$ - $k)$ si n $\geq$ 2 y P(n = 1) = 1 es Ω($2^{n}$). La ecuaci\'on de recurrencia P(n) genera los n\'umeros de Catal\'an.
+Mediante el m\'etodo de sustitución hacia adelante tenemos que:\\\\
+P(n=2) = $\sum_{k=1}^{1}P(k)P(n$ - $k)$ =P(1)*P(1)=1\\\\
+P(n=3) = P(2)*P(1) + P(1)*P(2) = 1 * 1 + 1 * 1 = 2\\\\
+P(n=4) = P(1)*P(3) + P(2)*P(2) + P(3)*P(1) =  1 * 2 + 1 * 1 + 1 * 1 = 5\\\\
+P(n=5) = P(1)*P(4) + P(2)*P(3) + P(3)*P(2) + P(4)*P(1) = 1 * 5 + 1 * 2 + 2 * 1 + 5 * 1 = 14\\\\
+Dichas cantidades podemos acotarlas con $2^{n}$, por ejemplo:\\\\
+P(2) = 1 ≥ c * $2^{2}$ = 4 * c, para todo c $\leq$ 1/4\\\\
+P(3) = 2 ≥ c * $2^{3}$ = 8 * c, para todo c $\leq$ 1/4\\\\
+P(4) = 5 ≥ c * $2^{4}$ = 16 * c, para todo c $\leq$ 1/4\\\\
+P(5) = 14 ≥ c * $2^{5}$ = 32 * c, para todo c $\leq$ 1/4\\\\
+Como podemos observar, los n\'umeros de Catal\'an acotan inferiormente a la funci\'on $2^{n}$, por lo que tenemos que P(n) $\epsilon$ $\Omega$ ($2^{n}$)
+\section{Bibliograf\'ia}
+Eumed.net (2018). [online] Available at: http://www.eumed.net/libros-gratis/2006c/216/1j.htm [Accessed 13 Nov. 2018].\\\\
+Radford.edu (2018). [online] Available at: https://www.radford.edu/nokie/classes/360/dp-matrix-parens.html [Accessed 13 Nov. 2018].\\\\
+\end{document}
