@@ -1,0 +1,211 @@
+\documentclass[12pt,twoside]{article}
+\usepackage{amsmath, amssymb}
+\usepackage{amsmath}
+\usepackage[active]{srcltx}
+\usepackage{amssymb}
+\usepackage{amscd}
+\usepackage{makeidx}
+\usepackage{amsthm}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\usepackage{graphicx}
+\renewcommand{\baselinestretch}{1}
+\setcounter{page}{1}
+\setlength{\textheight}{21.6cm}
+\setlength{\textwidth}{14cm}
+\setlength{\oddsidemargin}{1cm}
+\setlength{\evensidemargin}{1cm}
+\pagestyle{myheadings}
+\thispagestyle{empty}
+\markboth{\small{Pr\'actica 3. Reyes Valenzuela Alejandro, Guti\'errez Povedano Pablo.}}{\small{.}}
+\date{}
+\begin{document}
+\centerline{\bf An\'alisis de Algoritmos, Sem: 2018-2, 3CV1, Pr\'actica 3, 11 de Septiembre de 2018}
+\centerline{}
+\centerline{}
+\begin{center}
+\Large{\textsc{Pr\'actica 3: Divide y Vencer\'as: Algoritmo MergeSort}}
+\end{center}
+\centerline{}
+\centerline{\bf {Reyes Valenzuela Alejandro, Guti\'errez Povedano Pablo.}}
+\centerline{}
+\centerline{Escuela Superior de C\'omputo}
+\centerline{Instituto Polit\'ecnico Nacional, M\'exico}
+\centerline{$areyesv11@gmail.com, gpovedanop@gmail.com$}
+\newtheorem{Theorem}{\quad Theorem}[section]
+\newtheorem{Definition}[Theorem]{\quad Definition}
+\newtheorem{Corollary}[Theorem]{\quad Corollary}
+\newtheorem{Lemma}[Theorem]{\quad Lemma}
+\newtheorem{Example}[Theorem]{\quad Example}
+\bigskip
+\textbf{Resumen:} En este reporte se utilizar\'a el Divide y Vencer\'as para determinar la complejidad del algoritmo MergeSort, tanto de la parte de la separaci\'on de arreglos como el ordenamiento como tal.\\\\
+\centerline{{\bf Palabras Clave:} Divide, Vence, Combina, Bloques.}
+\section{Introducci\'on}
+Al momento de analizar algoritmos, es necesario hacerlo de tal manera que podamos hacerlo de manera r\'apida, independientemente del tamaño de la funci\'on que tendremos. Para ello los m\'etodos observados anteriormente podr\'ian ser algo engorrosos, ya que analizamos l\'inea por l\'inea. \\\\
+Para ello podemos utilizar el Divide y Vencer\'as (cuyo funcionamiento se explicar\'a en la siguiente secci\'on), el cual nos ahorra bastantes pasos, siendo escencial para algoritmos grandes. Para ello tomaremos de ejemplo el algoritmo MergeSort, un algoritmo que ocupa recursividad y que depende de otra subfunci\'on para funcionar.\\\\
+\section{Conceptos B\'asicos}
+El paradigma de Divide y Vencer\'as separa un problema en subproblemas que se parecen al problema original, de manera recursiva resuelve los subproblemas y, por \'ultimo, combina las soluciones de los subproblemas para resolver el problema original.\newpage
+Como divide y vencerás resuelve subproblemas de manera recursiva, cada subproblema debe ser m\'as pequeño que el problema original, y debe haber un caso base para los subproblemas.\\\\
+Para ello recurrimos a tres pasos fundamentales:
+\begin{itemize}
+  \item {\bf Divide:} Dividir el problema en un n\'umero de subproblemas que son instancias m\'as pequeñas del mismo problema.
+  \item {\bf Vence:} Resolver los subproblemas de manera recursiva. Si son los suficientemente peque\~{n}os, resolver los subproblemas como casos base.
+  \item {\bf Combina:} Juntar las soluciones de los subproblemas en la soluci\'on para el problema original.
+\end{itemize}
+Utilizaremos el paradigma para calcular el \'orden de complejidad del alogritmo MergeSort. Como sabemos, MergeSort se auxilia de otra funci\'on denominada Merge que se encarga de separar arreglos.\\\\
+Algoritmo Merge\\\\
+\hspace*{1cm}$Merge(A[p,...,q,...,r],p,q,r);$ donde p $\leq$ q $<$ r\\
+\hspace*{2cm}$n_{1}$ = $q$ - $p$ + $1$\\
+\hspace*{2cm}$n_{2}$ = $r$ - $q$\\
+\hspace*{2cm}Sean $L[n_{1}]$ y $R[n_{2}]$ dos arreglos\\
+\hspace*{2cm}$for(i=0;i<n_{1};i++)$\\
+\hspace*{2.5cm}$L[i]$ = $A[p+i]$\\
+\hspace*{2cm}$for(j=0;j<n_{2};j++)$\\
+\hspace*{2.5cm}$R[j]$ = $A[q+i+j]$\\
+\hspace*{2cm}$i$ = 0; $j$ = 0\\
+\hspace*{2cm}$for(k=0;k<r-p+1;k++)$\\
+\hspace*{2.5cm}$if(L[i]\leq R[j])$\\
+\hspace*{3cm}$A[k]$ = $L[i]$\\
+\hspace*{3cm}$i++$\\
+\hspace*{2.5cm}$else$\\
+\hspace*{3cm}$A[k]$ = $R[j]$\\
+\hspace*{3cm}$j++$\\\\\newpage
+Algoritmo MergeSort\\\\\
+\hspace*{1cm}$MergeSort(A[p,...,r],p,r)$\\
+\hspace*{1cm}{\bf In:} $Arreglo$ $A[p,...,r]$\\
+\hspace*{1cm}{\bf Out:} $Arreglo$ $ordenado$\\
+\hspace*{1cm}$if(p<r)$\\
+\hspace*{2cm}$q$ = $\frac{p+r}{2}$\\
+\hspace*{2cm}$MergeSort(A,p,q)$\\
+\hspace*{2cm}$MergeSort(A,q+1,p)$\\
+\hspace*{2cm}$Merge(A,p,q,r)$\\
+\section{Experimentaci\'on y Resultados}
+Calculando el \'orden de complejidad de Merge: (n=r-p+1)\\\\
+\centerline{
+\begin{tabular}{l c c c}
+   \hspace*{2cm}$n_{1}$ = $q$ - $p$ + $1$ & $C_{1}$ & $1$ & $\Theta(1)$\\
+   \hspace*{2cm}$n_{2}$ = $r$ - $q$ & $C_{2}$ & $1$ & $\Theta(1)$\\
+   \hspace*{2cm}Sean $L[n_{1}]$ y $R[n_{2}]$ dos arreglos & $C_{3}$ & $1$ & $\Theta(1)$\\
+   \hspace*{2cm}$for(i=0;i<n_{1};i++)$ & $C_{4}$ & $n_{1}+1$ & $\Theta(n_{1}+n_{2})$ \\
+   \hspace*{2.5cm}$L[i]$ = $A[p+i]$ & $C_{5}$ & $n_{1}$ & $\Theta(n_{1}+n_{2})$\\
+   \hspace*{2cm}$for(j=0;j<n_{2};j++)$ & $C_{6}$ & $n_{2}+1$ & $\Theta(n_{1}+n_{2})$\\
+   \hspace*{2.5cm}$R[j]$ = $A[q+i+j]$ & $C_{7}$ & $n_{2}$ & $\Theta(n_{1}+n_{2})$\\
+   \hspace*{2cm}$i$ = 0; $j$ = 0 & $C_{8}$ & $1$ & $\Theta(1)$\\
+   \hspace*{2cm}$for(k=0;k<r-p+1;k++)$ & $C_{9}$ & $r-p+2$ & $\Theta(n)$\\
+   \hspace*{2.5cm}$if(L[i]\leq R[j])$ & $C_{10}$ & $r-p+1$ & $\Theta(n)$\\
+   \hspace*{3cm}$A[k]$ = $L[i]$ & $C_{11}$ & $n_{1}$ & $\Theta(n)$\\
+   \hspace*{3cm}$i++$ & & &\\
+   \hspace*{2.5cm}$else$ & & &\\
+   \hspace*{3cm}$A[k]$ = $R[j]$ & $C_{12}$ & $n_{2}$ & $\Theta(n)$\\
+   \hspace*{3cm}$j++$ & & &\\
+\end{tabular}}\\\\
+Usaremos el paradigma de divide y vencer\'as para resolver esto. Para ello separaremos el c\'odigo y lo analizaremos por bloques.\\\\
+Las primeras tres l\'ineas y la l\'inea nueve se ejecutan un n\'umero constante de veces, por eso su complejidad es $\Theta(1)$.\\\\
+En el caso de las l\'ineas 4, 5, 6 y 7, el n\'umero de veces depende de los valores de $n_{1}$ y $n_{2}$, adem\'as los for que hacen uso de estas variables no est\'an anidados y tienen incrementos unitarios, por eso podemos decir que $\Theta(n_{1}+n_{2})$ = $\Theta(n)$.\\\\
+Lo mismo ocurre de la l\'inea 9 a la 12, no existen m\'as iteraciones dentro del for, por lo que en ese bloque la complejidad tambi\'en es $\Theta(n)$.\\\\
+Juntaremos las soluciones de los bloques para poder determinar la compeljidad del c\'odigo completo, en este caso, los bloques de mayor complejidad son $\Theta(n)$, mientras que en los de menor complejidad es $\Theta(1)$, al juntar ambas soluciones tenemos que Merge $\epsilon$ $\Theta(n)$. Ahora calcularemos la complejidad de Mergesort, donde analizaremos una funci\'on con recursividad con el paradigma utilizado anteriormente:\\\\
+\centerline{
+\begin{tabular}{ l  r }
+  \hspace*{1cm}$MergeSort(A[q,...,r],p,r)$\\
+  \hspace*{1cm}$if(p<r)$ & \\
+  \hspace*{1.5cm}$q$ = $\frac{p+r}{2}$ & $\Theta(1)$\\
+  \hspace*{1.5cm}$MergeSort(A,p,q)$ & T($\frac{n}{2}$)\\
+  \hspace*{1.5cm}$MergeSort(A,q+1,p)$ &  T($\frac{n}{2}$)\\
+  \hspace*{1.5cm}$Merge(A,p,q,r)$ & $\Theta(n)$\\
+\end{tabular}}\\\\
+En el bloque donde asignamos el valor de $q$ tras la comparaci\'on tiene se ejecuta una cantidad constante de veces, por lo que su complejidad es $\Theta(1)$. En el caso donde llamamos a la funci\'on Merge, demostramos anteriormente que su complejidad es $\Theta(n)$. Ahora s\'olo nos enfocaremos en la recursividad de la funci\'on.\\\\
+\centerline{$T(n)= \left\{\begin{array}{lcc}
+             \Theta(1) &   si  & n = 1 \\
+             \\ 2T(\frac{n}{2}) + \Theta(n) + \Theta(1) &  si & n > 1\\
+             \end{array}
+   \right.$}\\\\
+Como $\Theta(1)$ es constante y $\Theta(n)$ se ejecutar\'a un n\'umero constante de veces tenemos que:\\\\
+\centerline{$T(n)= \left\{\begin{array}{lcc}
+             c &   si  & n = 1 \\
+             \\ 2T(\frac{n}{2}) + c(n) &  si & n > 1\\
+             \end{array}
+   \right.$}\\\\
+Ahora resolveremos la recurrencia, como tenemos un cociente, debemos asegurarnos que nuestro resultado sea entero, para ello se propone el cambio de variable $n$ = $2^{k}$, donde $k$ = $\log_{2}(n)$, por lo que ahora resolveremos:\\\\
+\centerline{$T(n)$ = 2$T(\frac{n}{2})$+$C(n)$ = 2$T(2^{k-1})$+$C(2^{k})$}\\\\
+Haciendo iteraciones:\\\\
+\centerline{$T(2^{k})$ = 2(2$T(2^{k-2})$+$C(2^{k-1})$)+$C(2^{k})$}\\\\\\
+Llegando al t\'ermino i:\\\\
+\centerline{$T(2^{k})$ = $2^{i}$(($T(2^{k-i})$+$iC(2^{k}))$}\\\\
+Llegando a la condici\'on de frontera:\\\\
+\centerline{$T(2^{k})$ = $2^{k}$(($T(1)$+$kC(2^{k}))$}\\\\
+Finalmente:\\\\
+\centerline{$T(2^{k})$ = $c(n)$ + $\log_{2}(n)$ + $c(n)$}\\\\
+Por lo que MergeSort $\epsilon$ $\Theta(n\log_{10}(n))$.
+A continuaci\'on reafirmaremos esto de manera gr\'afica:
+Algoritmo Merge (comparando los tiempos de longitud 1 a 10 con n=13n)\\\\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/merge.png}}\\\\\newpage
+Algoritmo MergeSort (comparando los tiempos de longitud 1 a 10 con n=14nlog(n)\\\\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/mergesort.png}}\\\\
+Podemos ver que las funciones propuestas acotan a los puntos de las funciones Merge y Mergesort, por lo que comprobamos que MergeSort $\epsilon$ $\Theta(n\log_{10}(n))$ y que Merge $\epsilon$ $\Theta(n)$.\\\\
+Prueba de escritorio\\\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/mergechido.png}}\\\\\newpage
+\section{Conclusiones}
+\textbf{Conclusi\'on General: }Dividir y vencer\'as nos sirve para esta clase de algortimos, ya que aquí la recursividad se usa m\'as de una vez, adem\'as de que una funci\'on depende de la otra, por lo que para ahorrar tiempo en el an\'alisis, podemos revisar los bloques para finalmente juntar la soluci\'on.\\\\
+\textbf{Conclusi\'on Guti\'errez Povedano: }Utilizando el paradigma divide y vencerás se puede resolver un problema y generar un algoritmo cuya complejidad sea menor como en el caso del algoritmo merge sort el cual tiene un orden de complejidad $\Theta$(n*log(n)) para realizar el ordenamiento de forma ascendente de un arreglo de enteros el cual es menor al orden de complejidad de otros algoritmos que resuelven el mismo problema por ejemplo el algoritmo burbuja cuya complejidad en el peor caso es $O(n^{2})$.\\\\
+\textbf{Conclusi\'on Reyes Valenzuela:}Para este problema tuvimos que estar bastante atentos a la colocaci\'on de los \'indices, ya que estos nos indicaban por d\'onde partir y con base a esto, c\'omo se comportar\'ia el algoritmo, por otra parte, pudimos ver que a pesar de devolver valores semejantes al principio, los contadores crec\'ian de manera distinta, esto se debe a que cuando Merge es llamado, los contadores de MergeSort ya hab\'ian cambiando para \'ese entonces.\\\\
+\section{Anexo}
+Calcular el orden de complejidad de los siguientes algoritmos en el mejor ($\Omega$) y en el peor
+de los casos ($O$):\\
+\hspace*{1cm}$Funcion1(n$ $par)$\\
+\hspace*{2cm}$i = 0$\\
+\hspace*{2cm}$mientras$ $i < n$ $hacer$\\
+\hspace*{3cm}$para$ $j$ $=$ $1$ $hasta$ $j$ $=$ $10$ $hacer$\\
+\hspace*{3cm}$Accion(i)$\\
+\hspace*{3cm}$j++;$\\
+\hspace*{2cm}$i+=2;$\\
+Suponga que Accion $\epsilon$ $\theta$(1).\\\\
+\hspace*{1cm}$Funcion2(A[0,...,n-1]$ , $x$ $entero)$\\
+\hspace*{2cm}$for$ $i$ = $0$ $to$ $i$ $<$ $n$ $do$\\
+\hspace*{3cm}$if$ $(A[i]$ $<$ $x)$\\
+\hspace*{4cm}$A[i]$ = $min(A[0,...,n-1])$\\
+\hspace*{3cm}$else$ $if$ $(A[i]$ $>$ $x)$\\
+\hspace*{4cm}$A[i]$ = $max(A[0,...,n-1])$\\
+\hspace*{3cm}$else$\\
+\hspace*{4cm}exit\\\\
+\textbf{Funci\'on 1:}Para ambos casos analizaremos las funciones por bloques:\\\\
+\hspace*{1cm}$Funcion1(n$ $par)$\\
+\hspace*{2cm}$i = 0$\\
+\centerline{
+\begin{tabular}{ l  r }
+  \hspace*{1cm}$Funcion1(n$ $par)$\\
+  \hspace*{2cm}$i = 0$ &  $\Theta(1)$\\
+  \hspace*{2cm}$mientras$ $i < n$ $hacer$ & $\Theta(n)$\\
+  \hspace*{3cm}$para$ $j$ $=$ $1$ $hasta$ $j$ $=$ $10$ $hacer$ &  $\Theta(1)$\\
+  \hspace*{3cm}$Accion(i)$ & --\\
+  \hspace*{3cm}$j++;$ & $\Theta(1)$\\
+  \hspace*{2cm}$i+=2;$ & -- \\
+\end{tabular}}\\\\
+En este caso, nuestro peor y mejor caso son el mismo, ua que el for interno siempre se ejecutar\'a diez veces, y esas diez veces se har\'an con base al n\'umero n, por lo que podemos decir que el algoritmo tiene complejidad lineal.\\\\
+\textbf{Funci\'on 2:}En este caso s\'i existe el mejor y el peor caso, siendo el mejor cuando el m\'aximo o el m\'inimo son el primer n\'umero del arreglo, por lo que tenemos que nuestro s\'olo se ejecutar\'a una vez (como n=0):\\\\
+\centerline{
+\begin{tabular}{ l  r }
+ \hspace*{1cm}$Funcion2(A[0,...,n-1]$ , $x$ $entero)$\\
+  \hspace*{2cm}$for$ $i$ = $0$ $to$ $i$ $<$ $n$ $do$ & $\Omega(n)$\\
+  \hspace*{3cm}$if$ $(A[i]$ $<$ $x)$ & $\Omega(1)$\\
+   \hspace*{4cm}$A[i]$ = $min(A[0,...,n-1])$ &  --\\
+  \hspace*{3cm}$else$ $if$ $(A[i]$ $>$ $x)$ & $\Omega(1)$\\
+  \hspace*{4cm}$A[i]$ = $max(A[0,...,n-1])$ & --\\
+ \hspace*{3cm}$else$ & $\Theta(1)$\\
+ \hspace*{4cm}exit & -- \\
+\end{tabular}}\\\\
+En el mejor caso es lineal. Ahora revisaremos el peor caso:\\\\
+\centerline{
+\begin{tabular}{ l  r }
+ \hspace*{1cm}$Funcion2(A[0,...,n-1]$ , $x$ $entero)$\\
+  \hspace*{2cm}$for$ $i$ = $0$ $to$ $i$ $<$ $n$ $do$ & $O(n)$\\
+  \hspace*{3cm}$if$ $(A[i]$ $<$ $x)$ & $O(1)$\\
+   \hspace*{4cm}$A[i]$ = $min(A[0,...,n-1])$ &  $O(n)$\\
+  \hspace*{3cm}$else$ $if$ $(A[i]$ $>$ $x)$ & $O(1)$\\
+  \hspace*{4cm}$A[i]$ = $max(A[0,...,n-1])$ & $O(n)$\\
+ \hspace*{3cm}$else$ & $O(1)$\\
+ \hspace*{4cm}exit & $O(1)$ \\
+\end{tabular}}\\\\
+En peor caso, el for se ejecutar\'a n veces, y entrar\'a en las comparaciones otras n veces, por lo que al aplicar las propiedades vistas en clase obtenemos que la complejidad de este algoritmo en su peor caso es cuadr\'atico.
+\section{Bibliograf\'ia}
+Khanacademy.org (2018). [online] Available at: https://es.khanacademy.org/computing/computer-science/algorithms/merge-sort/a/divide-and-conquer-algorithms. [Accessed 11 Sep. 2018].
+\end{document}
