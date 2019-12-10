@@ -1,0 +1,222 @@
+\documentclass[12pt,twoside]{article}
+\usepackage{amsmath, amssymb}
+\usepackage{amsmath}
+\usepackage[active]{srcltx}
+\usepackage{amssymb}
+\usepackage{amscd}
+\usepackage{makeidx}
+\usepackage{amsthm}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\usepackage{graphicx}
+\renewcommand{\baselinestretch}{1}
+\setcounter{page}{1}
+\setlength{\textheight}{21.6cm}
+\setlength{\textwidth}{14cm}
+\setlength{\oddsidemargin}{1cm}
+\setlength{\evensidemargin}{1cm}
+\pagestyle{myheadings}
+\thispagestyle{empty}
+\markboth{\small{Pr\'actica 1. Reyes Valenzuela Alejandro, Guti\'errez Povedano Pablo.}}{\small{.}}
+\date{}
+\begin{document}
+\centerline{\bf An\'alisis de Algoritmos, Sem: 2018-2, 3CV5, Pr\'actica 1, 22 de Agosto de 2018}
+\centerline{}
+\centerline{}
+\begin{center}
+\Large{\textsc{Pr\'actica 1: Determinaci\'on experimental de la complejidad temporal de un
+algoritmo}}
+\end{center}
+\centerline{}
+\centerline{\bf {Reyes Valenzuela Alejandro, Guti\'errez Povedano Pablo.}}
+\centerline{}
+\centerline{Escuela Superior de C\'omputo}
+\centerline{Instituto Polit\'ecnico Nacional, M\'exico}
+\centerline{$areyesv11@gmail.com, gpovedanop@gmail.com$}
+\newtheorem{Theorem}{\quad Theorem}[section]
+\newtheorem{Definition}[Theorem]{\quad Definition}
+\newtheorem{Corollary}[Theorem]{\quad Corollary}
+\newtheorem{Lemma}[Theorem]{\quad Lemma}
+\newtheorem{Example}[Theorem]{\quad Example}
+\bigskip
+\textbf{Resumen:} En este reporte se explicar\'a de manera precisa c\'omo fueron implementados los algoritmos de la pr\'actica, al igual que la generaci\'on de las gr\'aficas de las mismas, y qu\'e nos dicen en cuanto a la complejidad temporal de estos.\\\\
+\centerline{{\bf Palabras Clave:} Tiempo, Algoritmo, Complejidad, Notaci\'on.}
+\section{Introducci\'on}
+Un algoritmo es definido com\'unmente como una serie de pasos que son realizados con un prop\'osito en espec\'ifico. Cada vez que sigamos los pasos de un algoritmo, es importante que lleguemos al mismo resultado, tambi\'en es importante identificar el principio y el fin de \'este, y mayormente, es necesario describir tres partes: Entrada, Proceso y Salida. \\\\
+Es importante analizar estos algoritmos para poder determinar su complejidad y juzgar cu\'al es el mejor o el peor para los escenarios que se nos puedan presentar al codificarlos; siendo \'este el objetivo de la pr\'actica, codificar algortimos y basar su complejidad con base al n\'umero de veces que una l\'inea es ejecutada (esto se tratar\'a m\'as adelante en la Secci\'on 2).
+\section{Conceptos B\'asicos}
+De entrada comenzaremos por definir las notaciones vistas en clase las cu\'ales nos servir\'an para identificar el mejor caso, el peor caso, o cuando el peor caso y el mejor caso no son diferentes entre s\'i.\\\\
+{\bf Notaci\'on $\Theta$:} Una cota ajustada asint\'otica es una funci\'on que sirve de cota tanto superior como inferior de otra funci\'on cuando el argumento tiende a infinito. Usualmente se utiliza la notaci\'on $\Theta$(g(n)) para referirse a las funciones acotadas por la funci\'on g(n).\\\\
+Una funci\'on es $\Theta$(g(n)) s\'i y s\'olo s\'i existe para toda n las constantes $C_{1}$ , $C_{2}$ , $n_{0}$ $>$ 0, tales que 0 $\leq$ $C_{1}$g(n) $\leq$ f(n) $\leq$ $C_{2}$g(n) para toda n $\leq$ $n_{0}$.\\\\
+En esta notaci\'on consideramos que tanto el mejor caso como el peor caso tienen el mismo nivel de dificultad, por lo que acotamos nuestra funci\'on por ambos lados para determinar si nuestra funci\'on pertenece a $\Theta$, adem\'as decimos que g(n) es un ajuste asint\'atico para f(n).\\\\
+{\bf Notaci\'on $O$:} Una cota superior asint\'otica es una funci\'on que sirve de cota superior de otra funci\'on cuando el argumento tiende a infinito.\\\\
+Una funci\'on es $O$(g(n)) s\'i y s\'olo s\'i existe para toda n las constantes $C_{1}$ , $n_{0}$ $>$ 0, tales que 0 $\leq$ f(n) $\leq$ $C_{1}$g(n) para toda n $\leq$ $n_{0}$.\\\\
+En esta notaci\'on solo consideramos el peor caso.\\\\
+{\bf Notaci\'on $\Omega$:} Una cota inferior asint\'otica es una funci\'on que sirve de cota inferior de otra funci\'on cuando el argumento tiende a infinito. \\\\
+Una funci\'on es $\Omega$(g(n)) s\'i y s\'olo s\'i existe para toda n las constantes $C_{1}$ , $n_{0}$ $>$ 0, tales que 0 $\leq$ $C_{1}$g(n) $\leq$ f(n) para toda n $\leq$ $n_{0}$.\\\\
+En esta notaci\'on solo consideramos el mejor caso.\\\\
+Como podemos observar, depender\'a de la notaci\'on utilizada la cota que encontraremos, es decir, nos concentraremos en los escenarios que se le presenten al algoritmos; si buscamos la cota inferior, entonces nos concentramos en el mejor escenario, si buscamos la superior, nos concentramos en el peor escenario y si buscamos ambas, el algoritmo no presenta un mejor o peor escenario como tal, es decir todos los casos a tratar mantienen la misma complejidad temporal.\\\\
+\centerline{\bf Algoritmos desarrollados}\\\\
+En esta pr\'actica se desarrollaron dos algoritmos:\\\\
+{\bf Suma Binaria:} Desarrollar e implementar un algoritmo Suma que sume dos enteros en notaci\'on binaria bajo las siguientes consideraciones: Dos arreglos unidimensionales A de tama\~{n}o n y B de tama\~{n}o m con k = log$_2(n)$ y t = log$_2(m)$ (es decir, que sean potencias de 2) almacenar\'an los n\'umeros a sumar. La suma se almacenar\'a en un arreglo C.\\\\
+Para este algoritmo, se opt\'o por rellenar los arreglos A y B con unos y ceros de manera aleatoria, para posteriormente realizar la 'suma', la cual solamente comparar\'a los valores de los acarreos y de los valores en la posici\'on i para determinar el valor del pr\'oximo acarreo de entrada y de la suma actual.\\\\
+A continuaci\'on se muestra el algoritmo en cuesti\'on al igual que una prueba de escritorio con dos bits:\\\\
+Suma(A,B): (A,B arreglos):\\\\
+\hspace*{1cm}for i $\leftarrow$ n-1 to $\geq$ 0 do\\
+\hspace*{2cm}if A[i] == 0 and B[i] == 0 and carry == 0 then\\
+\hspace*{3cm}C[i] $\leftarrow$ 0\\
+\hspace*{3cm}carry $\leftarrow$ 0\\
+\hspace*{2cm}else if A[i] == 0 and B[i] == 0 and carry == 1 then\\
+\hspace*{3cm}C[i] $\leftarrow$ 1\\
+\hspace*{3cm}carry $\leftarrow$ 0\\
+\hspace*{2cm}else if A[i] == 1 and B[i] == 0  or A[i] == 0 and B[i] == 1 and carry ==  0 then\\
+\hspace*{3cm}C[i] $\leftarrow$ 1\\
+\hspace*{3cm}carry $\leftarrow$ 0\\
+\hspace*{2cm}else if A[i] == 1 and B[i] == 0  or A[i] == 0 and B[i] == 1 and carry ==  1 then\\
+\hspace*{3cm}C[i] $\leftarrow$ 0\\
+\hspace*{3cm}carry $\leftarrow$ 1\\
+\hspace*{2cm}else if A[i] == 1 and B[i] == 1 and carry == 0 then\\
+\hspace*{3cm}C[i] $\leftarrow$ 0\\
+\hspace*{3cm}carry $\leftarrow$ 1\\
+\hspace*{2cm}else if A[i] == 1 and B[i] == 1 and carry == 1 then\\
+\hspace*{3cm}C[i] $\leftarrow$ 1\\
+\hspace*{3cm}carry $\leftarrow$ 1\\\\
+Finalmente procedemos a desplegar la suma (almacenada en el arreglo C). Por ejemplo, para A=$\{$0,1$\}$ y B=$\{$0,1$\}$ se tiene el siguiente funcionamiento: (tomando en cuenta n=2):\\\\\\\\\\
+\hspace*{1cm}for i $\leftarrow$ 1 to $\geq$ 0 do\\
+\hspace*{2cm}....\\
+\hspace*{2cm}else if A[i] == 1 and B[i] == 0  or A[i] == 0 and B[i] == 1 and carry ==  0 then (esta es la condici\'on que cumple nuestro ejemplo en ambos casos)\\ 
+\hspace*{3cm}C[i] $\leftarrow$ 1\\
+\hspace*{3cm}carry $\leftarrow$ 0\\
+\hspace*{2cm}....\\\\
+Debido a esto al ir nuestro for de 0 a 1, el arreglo C tiene dos espacios para almacenar nuestra suma, por lo que en ambos casos se llenar\'a con un 1, por lo que nuestro arreglo C quedar\'a conformado de la siguiente manera C=\{1,1\}.\\\\
+{\bf Algoritmo de Euclides:} Implementar el algoritmo de Euclides para encontrar el mcd de dos n´umeros enteros
+positivos m y n.\\\\
+\hspace*{1cm}Euclides(m,n):\\
+\hspace*{2cm}while n $\neq$ 0 do\\
+\hspace*{3cm}r $\leftarrow$ m mod n\\
+\hspace*{3cm}m $\leftarrow$ n \\
+\hspace*{3cm}n $\leftarrow$ r \\
+\hspace*{2cm}return m\\\\
+A continuaci\'on mostraremos el funcionamiento del algoritmo con m=12 y n=6:\\\\
+\hspace*{1cm}Euclides(12,6):\\
+\hspace*{2cm}while 6 $\neq$ 0 do\\
+\hspace*{3cm}r $\leftarrow$ 12 mod 6 $\leftarrow$ 0\\
+\hspace*{3cm}m $\leftarrow$ n $\leftarrow$ 6\\
+\hspace*{3cm}n $\leftarrow$ r $\leftarrow$ 0\\
+\hspace*{2cm}return m\\\\
+Al terminar el algoritmo (antes de que n valiera cero), nos devolver\'a el MCD de 12 y 6, en el que en este caso es 6.\\\\\
+\section{Experimentaci\'on y Resultados}
+{\bf Suma Binaria:} Se adjunta foto del funcionamiento tras compilaci\'on del algoritmo y la gr\'afica generada con valores desde 2$\textsuperscript{1}$ hasta 2$\textsuperscript{11}$.\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/screensuma.png}}\\\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/graphsuma.png}}\\
+Al asignar una constante k que se incrementara cada vez que una l\'inea de c\'odigo era ejecutada o por cada iteraci\'on nos dimos cuenta que estos pod\'ian ser unidos por una recta, por lo que nos damos cuenta de que los puntos presentados en la gr\'afica anterior son parte de la misma funci\'on.\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/graphpoints.png}}\\\\
+Ahora se propone la funci\'on g(n)=4n para demostrar que Suma $\epsilon$ O(g(n)) y g(n) sea m\'inima, en el
+sentido de que si suma $\epsilon$ O(h(n)), entonces $g(n)$ $\epsilon$ $(h(n)).$\\\\
+Esto se puede observar de manera gr\'afica, siendo la gr\'afica roja la funci\'on suma, 4n la negra y $n_{0}$=1 (el primer punto donde se empieza a acotar la funci\'on) la recta azul. \\\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/graphcotassuma.png}}\\
+{\bf Conclusi\'on Reyes Valenzuela:} Podemos observar que la complejidad de este algorimto crece con base al n\'umero de bits que tenga el arreglo, por este motivo decimos que pose\'e una complejidad lineal.\\\\
+{\bf Conclusi\'on Guti\'errez Povedano:} Ya que el tama\~{n}o de los arreglos var\'ia en potencias de 2 y que tanto en el mejor caso como en el peor se deben recorre los arreglos por completo el orden de complejidad para este algoritmo es $\theta(n)$.\\\\
+{\bf Euclides:} Se adjunta im\'agen correspondiente al funcionamiento del algoritmo en c\'odigo.\\\\
+\centerline{\includegraphics[width=6cm,height=10cm]{images/screeneuc.png}}\\
+Para graficar consideramos el peor de los casos, el cu'al es que los n\'umeros ingreados a la funci\'on correspondan a la serie de Fibonacci, en los cuales no existen un MCD, por lo que la funci\'on siempre nos retornar\'a un 1, (k vs n, siendo n el mayor nümero ingresado a la funci\'on, los puntos representan los puntos encontrados en la relaci\'on n/tiempo, donde se utilizaron los primeros 16 t\'erminos (0-987)).\\\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/sin.png}}\\
+Podemos observar que nuestros valores de constante k aumentan de manera logar\'itmica.\\\\
+Ahora se propone la funci\'on 6$\log_2$(n)para demostrar que Euclides $\epsilon$ O(g(n)) y g(n) sea m\'inima, en el
+sentido de que si Euclides $\epsilon$ O(h(n)), entonces $g(n)$ $\epsilon$ $O(h(n)).$\\\\
+Para ello graficamos la funci\'on (expresada en naranja) contra los puntos generados por la funci\'on de Euclides:\\\\
+\centerline{\includegraphics[width=10cm,height=6cm]{images/cotaeuc.png}}\\
+Como podemos observar, la gráfica naranja acota a la función de Euclides por arriba, por lo que podemos decir con certeza que entonces $g(n)$ $\epsilon$ $O(h(n)).$\\\\
+{\bf Conclusi\'on Reyes Valenzuela:} En este algoritmo tenemos que nuestros puntos crecen de manera logar\'itmica, por lo que podemos decir que nuestra funci\'on tiene un nivel de complejidad menor que el anterior, y esto se puede determinar gracias a las formas de gr\'aficas generadas.\\\\
+{\bf Conclusi\'on Guti\'errez Povedano:} Al usarse dos n\'umeros consecutivos de la sucesi\'on Fibonacci en el algoritmo de Euclides se
+obtiene el peor caso del algoritmo y ya que despu\'es de 2 iteraciones del programa el algoritmo pasa de euc(Fi,Fi-1) a euc(Fi-1,Fi-2) que es dividir a la mitad el tamaño del problema, por lo que la complejidad del algoritmo disminuye de manera considerable.\\\\
+\section{Conclusiones}
+{\bf Conclusi\'on General:} Esta pr\'actuca nos sirvi\'o para comparar dos algoritmos para calcular su complejidad, los cu\'ales fueron muy distintos de graficar, ya que la primera qued\'o de manera lineal (como recta) mientras que en la otra se nos gener\'o una que se asemeja a una funci\'on logar\'itmica. El hecho de que hayamos podido determinar esto mediante la experimentaci\'on nos indica que hemos entendido los conceptos vistos en clase de manera correcta.\\\\
+{\bf Conclusi\'on Reyes Valenzuela:} En mi caso tuve complicaciones con el primer programa, ya que la suma binaria funciona de manera distinta a la suma normal, por lo que deb\'iamos de controlar el valor de la suma y el acarreo que se pudiese generar, esto no sucedi\'o con el segundo programa, ya que de alguna manera este algor\'itmo ya est\'a definido.\\\\
+{\bf Conclusi\'on Guti\'errez Povedano:} Al termino de la practica se puede concluir que el orden de complejidad de un algoritmo puede ser el mismo para el peor o mejor de los casos como en el ejercicio 1 o distinto pero nunca mayor que el peor de los casos como en el ejercicio 2, ademas de que la complejidad del algoritmo puede estimarse facilmente analizando la cantidad y las condiciones de los ciclos que se implementan en dicho algoritmo.\\\\
+\section{Anexo}
+El siguiente algoritmo, es un algoritmo de ordenamiento llamado por selecci\'on (SelectSort(A)).\\
+i) Muestre mediante un ejemplo, el funcionamiento del algoritmo.\\
+ii) Calcular el orden de complejidad en el peor de los casos mediante el c\'alculo temporal l\'inea por l\'inea.\\\\
+\hspace*{1cm}{\bf Select-Sort}(A[0, . . . , n $-$ 1])\\\\
+\hspace*{2cm}for j $\leftarrow$ 0 to j $\leq$ n $-$ 2 do\\
+\hspace*{3cm}k $\leftarrow$ j\\
+\hspace*{4cm}for i $\leftarrow$ j + 1 to i $\leq$ n $-$ 1 do\\
+\hspace*{5cm}if A[i] $<$ A[k] then\\
+\hspace*{6cm}k $\leftarrow$ i\\
+\hspace*{3cm}Intercambia (A[j],A[k])\\\\
+Para mostrar el funcionamiento usaremos un arreglo de tama\~{n}o 4, siendo A$\left\lbrace12, 31, 5, 100\right\rbrace$ el arreglo que usaremos para la prueba de escritorio (Sobreentendi\'endose el hecho de que n=4).\\\\
+\hspace*{2cm}for j $\leftarrow$ 0 to j $\leq$ 4 $-$ 2 do\\
+\hspace*{3cm}k $\leftarrow$ j\\
+\hspace*{4cm}for i $\leftarrow$ j + 1 to i $\leq$ 4 $-$ 1 do\\
+\hspace*{5cm}if A[i] $<$ A[k] then\\
+\hspace*{6cm}k $\leftarrow$ i\\
+\hspace*{3cm}Intercambia (A[j],A[k])\\\\
+Tras hacer la suma tenemos que:\\\\
+\hspace*{2cm}for j $\leftarrow$ 0 to j $\leq$ 2 do\\
+\hspace*{3cm}k $\leftarrow$ j\\
+\hspace*{4cm}for i $\leftarrow$ j + 1 to i $\leq$ 3 do\\
+\hspace*{5cm}if A[i] $<$ A[k] then\\
+\hspace*{6cm}k $\leftarrow$ i\\
+\hspace*{3cm}Intercambia (A[j],A[k])\\\\
+Iteraci\'on 1:\\\\
+\hspace*{2cm}for j $\leftarrow$ 0 to j $\leq$ 2 do\\
+\hspace*{3cm}k $\leftarrow$ 0\\
+\hspace*{4cm}for i $\leftarrow$ 0 + 1 to i $\leq$ 3 do\\
+\hspace*{4.2cm}if A[1] $<$ A[0] then (el if no se cumple, ya que 12 $<$ 31)\\
+\hspace*{6cm}k $\leftarrow$ i (no se hace)\\
+\hspace*{3cm}Intercambia (A[j](12),A[k](12)) (se queda igual)\\\\
+Iteraci\'on 2:\\\\
+\hspace*{2cm}for j $\leftarrow$ 1 to j $\leq$ 2 do\\
+\hspace*{3cm}k $\leftarrow$ 1\\
+\hspace*{4cm}for i $\leftarrow$ 1 + 1 to i $\leq$ 3 do\\
+\hspace*{4.2cm}if A[2] $<$ A[1] then (el if se cumple, ya que 5 $<$ 31)\\
+\hspace*{6cm}k $\leftarrow$ 2 (se hace)\\
+\hspace*{3cm}Intercambia (A[j](31),A[k](5)) (cambia de posici\'on)\\\\
+Iteraci\'on 3:\\\\
+\hspace*{2cm}for j $\leftarrow$ 2 to j $\leq$ 2 do\\
+\hspace*{3cm}k $\leftarrow$ 2\\
+\hspace*{4cm}for i $\leftarrow$ 2 + 1 to i $\leq$ 3 do\\
+\hspace*{4.2cm}if A[3] $<$ A[2] then (el if no se cumple, ya que 5 $<$ 100)\\
+\hspace*{6cm}k $\leftarrow$ i (no se hace)\\
+\hspace*{3cm}Intercambia (A[j](5),A[k](5)) (se queda igual)\\\\
+Por lo que nuestro arreglo queda acomodado de la siguiente manera A$\left\lbrace5, 12, 31, 100\right\rbrace$\\\\
+\newpage
+A continuac\'on calcularemos el nivel de complejidad de manera anal\'itica, para ello asignamos cosntantes  y determinamos el n\'umero de veces que las l\'ineas de c\'odigo son ejecutadas:\\\\
+\begin{tabular}{ l c r }
+   \hspace*{1cm}for j $\leftarrow$ 0 to j $\leq$ n $-$ 2 do & $C_{1}$ & $n$ \\
+   \hspace*{2cm}k $\leftarrow$ j & $C_{2}$ & $n-1$ \\
+   \hspace*{3cm}for i $\leftarrow$ j + 1 to i $\leq$ n $-$ 1 do & $C_{3}$ & $\sum_{i=0}^{n-1}t_{i}$ \\
+   \hspace*{3.5cm}if A[i] $<$ A[k] then & $C_{4}$ & $\sum_{i=0}^{n-1}(t_{i}-1)$ \\ \\
+   \hspace*{4cm}k $\leftarrow$ i & $C_{5}$ & $\sum_{i=0}^{n-1}(t_{i}-1)$ \\
+   \hspace*{2cm}Intercambia (A[j],A[k]) & $C_{6}$ & $n-1$ \\
+ \end{tabular}\\\\
+Calcularemos el valor de las sumatorias:\\\\
+\centerline{
+\begin{tabular}{ l | c  }
+\hline
+   $i$ & $t_{i}$ \\
+ \hline
+   1 & n-1\\
+   2 & n-2\\
+   3 & n-3\\
+   4 & n-4\\
+   5 & n-5\\
+ \end{tabular}\\
+ Por lo que tenemos que $t_{i}$ = $n-i$}\\\\
+ Ahora, el algoritmo est\'a definido por $T(n)$, qui\'en a su vez est\'a conformado por:\\\\
+\centerline{$T(n)$ = $C_{1}$*$n$ + $C_{2}$*($n-1$) + $C_{3}$*$\sum_{i=0}^{n-1}t_{i}$ + $C_{4}$*$\sum_{i=0}^{n-1}(t_{i}-1)$ + $C_{5}$*$\sum_{i=0}^{n-1}(t_{i}-1)$ + $C_{6}$*($n-1$)}\\\\
+Sustituyendo:\\\\
+\centerline{$T(n)$ = $C_{1}$*$n$ + $C_{2}$*($n-1$) + $C_{3}$*$\sum_{i=0}^{n-1}(n-i)$ + $C_{4}$*$\sum_{i=0}^{n-1}(n-i-1)$ + $C_{5}$*$\sum_{i=0}^{n-1}(n-i-1)$ + $C_{6}$*($n-1$)}\\\\
+Como $\sum_{i=0}^{n-1}(n-i-1) = \frac{1}{2}(n-1)n$ y $\sum_{i=0}^{n-1}(n-i) = \frac{1}{2}(n+1)n$, entonces $T(n)$ queda de la siguiente forma:\\\\
+\centerline{$T(n)$ = $C_{1}$*$n$ + $C_{2}$*($n-1$) + $C_{3}$*$\frac{1}{2}(n+1)n$ + $C_{4}$*$\frac{1}{2}(n-1)n$ + $C_{5}$*$\frac{1}{2}(n-1)n$ + $C_{6}$*($n-1$)}\\\\
+Desarrollando y agrupando t\'erminos semejantes (las constantes al multiplicarse dan como resultado otra constante, por lo que podemos representarlas en una sola):\\\\
+\centerline{$T(n)$ = $C_{1}$*$n$ + $C_{2}$*$n$ - $C_{2}$ + $C_{3}$*$\frac{n^{2}}{2}$ + $C_{3}$*$\frac{n}{2}$ + $C_{4}$*$\frac{n^{2}}{2}$ - $C_{4}$*$\frac{n}{2}$ + $C_{5}$*$\frac{n^{2}}{2}$ - $C_{5}$*$\frac{n}{2}$
++ $C_{6}$*$n$ - $C_{6}$ }\\\\
+\centerline{$T(n)$ = $n^{2}(C_{3}+C_{4}+C_{5})+n(C_{1}+C_{2}+C_{3}+C_{4}+C_{5}+C_{6})+(-C_{2}-C_{6})$}\\\\
+Observamos que nuestro algoritmo en el peor de los casos se torna cuadr\'atico, por lo que decimos que $Selection Sort$ $\epsilon$ $O(n^{2})$.
+\section{Bibliograf\'ia}
+Es.wikipedia.org. (2018). Cota ajustada asint\'otica. [online] Available at: https://es.wikipedia.org/wiki/Cota\_ajustada\_asint\'otica [Accessed 27 Aug. 2018].\\\\
+Es.wikipedia.org. (2018). Cota inferior asint\'otica. [online] Available at: https://es.wikipedia.org/wiki/Cota\_inferior\_asint\'otica [Accessed 27 Aug. 2018].\\\\
+Es.wikipedia.org. (2018). Cota superior asint\'tica. [online] Available at: https://es.wikipedia.org/wiki/Cota\_superior\_asint\'otica [Accessed 27 Aug. 2018].
+\end{document}
